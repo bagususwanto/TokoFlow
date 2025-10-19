@@ -1,24 +1,40 @@
-# Sistem Kasir & Stok Toko Kecil
+# Sistem Kasir & Stok – Multi-Toko
 
-## Ringkasan
+## Overview
 
-Sistem ini dirancang untuk membantu toko kecil dalam mencatat transaksi penjualan, mengelola stok barang, dan memantau laporan keuangan harian.  
-Tujuan utama sistem ini adalah **meningkatkan efisiensi operasional** tanpa membutuhkan perangkat mahal atau pelatihan rumit.
+Sistem ini adalah aplikasi **Point of Sale (POS)** berbasis web yang mendukung **multi-cabang toko** dengan fitur **manajemen stok**, **transaksi penjualan**, dan **laporan real-time**. Sistem dirancang untuk usaha retail/minimarket agar operasional lebih **efisien**, **akurat**, dan **terkontrol** tanpa pencatatan manual.
 
-## Tujuan
+### Tujuan
 
-- Menggantikan pencatatan manual kasir dan stok.
-- Meminimalkan kesalahan dalam perhitungan transaksi dan stok.
-- Menyediakan laporan keuangan harian/mingguan otomatis.
+- Menggantikan pencatatan manual penjualan dan stok
+- Meminimalkan kesalahan input dan kehilangan data
+- Menyediakan laporan penjualan otomatis dan real-time
+- Meningkatkan kontrol stok barang dengan riwayat pergerakan stok
+- Mendukung ekspansi bisnis dengan model multi-cabang toko
 
-## Pengguna Sistem
+### Pengguna Sistem
 
-- **Kasir:** Mencatat penjualan dan transaksi harian.
-- **Admin:** Melihat laporan, menambah barang, memantau stok, dan menetapkan harga.
+| Role      | Hak Akses Utama                                      |
+| --------- | ---------------------------------------------------- |
+| **Owner** | Full akses semua data & pengaturan sistem            |
+| **Admin** | Kelola barang, stok, dan laporan untuk toko tertentu |
+| **Kasir** | Input transaksi penjualan                            |
 
-## Lingkup
+### Lingkup Sistem
 
-- Penjualan tunai sederhana (cash-based)
-- Pengelolaan stok barang
-- Cetak struk / laporan sederhana
-- Tidak mencakup manajemen karyawan atau sistem hutang pelanggan (opsional di masa depan)
+- Penjualan kasir berbasis web (**POS**)
+- Pengelolaan stok barang per toko
+- Manajemen toko (**multi-store**)
+- Laporan penjualan otomatis
+- Log aktivitas (**audit trail**)
+- Role & hak akses pengguna
+- Backup & restore data
+- UI mobile-friendly
+
+### Fitur Opsional (Fase Berikutnya)
+
+- Sistem hutang piutang pelanggan (**account receivable**)
+- Return barang
+- Purchase order ke supplier
+- Offline mode (PWA)
+- Integrasi marketplace

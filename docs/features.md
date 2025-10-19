@@ -1,29 +1,70 @@
-# Fitur Utama
+# Features - Sistem Kasir & Stok Multi-Toko
 
-## 1. Manajemen Barang
+## Manajemen Barang
 
-- Tambah, ubah, dan hapus barang.
-- Kategori barang (misalnya: makanan, minuman, sembako).
-- Notifikasi stok menipis.
+- CRUD barang (tambah, ubah, hapus)
+- Kategori barang dinamis
+- Barcode unik untuk scan
+- Harga & stok per toko
+- Minimal stok & notifikasi stok menipis
+- Riwayat stok (stock history):
 
-## 2. Transaksi Penjualan
+  - **IN** (barang masuk)
+  - **OUT** (barang keluar/terjual)
+  - **ADJUST** (penyesuaian stok)
 
-- Scan barcode atau pilih barang secara manual.
-- Hitung otomatis total dan kembalian.
-- Cetak struk (via printer thermal / PDF).
+## Transaksi Penjualan (Kasir)
 
-## 3. Laporan
+- Pilih toko sebelum transaksi
+- Input barang via **scan barcode** atau **pencarian cepat**
+- Keranjang transaksi: ubah jumlah (qty), hapus item
+- Hitung otomatis total + kembalian
+- Metode pembayaran: **Cash / QRIS / Transfer**
+- Auto-generate nomor invoice
+- Cetak struk (**PDF / Thermal Printer**)
 
-- Laporan penjualan harian, mingguan, bulanan.
-- Ringkasan barang terlaris.
-- Grafik penjualan sederhana.
+## Multi-Toko (Multi-Store)
 
-## 4. Manajemen Pengguna
+- Data barang & stok terpisah per toko
+- Transaksi dicatat per toko
+- Role akses per toko:
 
-- Role: Admin dan Kasir.
-- Autentikasi login dengan JWT.
+  - **Owner** = akses semua
+  - **Admin** = toko tertentu
+  - **Kasir** = toko tertentu
 
-## 5. Backup & Restore
+## Laporan
 
-- Ekspor data transaksi dan stok ke file `.xlsx` atau `.csv`.
-- Impor data kembali bila perlu.
+- Laporan penjualan harian, mingguan, bulanan
+- Filter laporan berdasarkan toko, kasir, tanggal
+- Top produk terlaris
+- Grafik performa penjualan
+- Export laporan ke **Excel (.xlsx)**
+
+## Manajemen Pengguna & Role
+
+- Role-based access control (**RBAC**)
+- Assign user ke toko tertentu
+- Status user: **active / inactive**
+- Login aman menggunakan **JWT Authentication**
+
+## Manajemen Toko
+
+- Tambah, ubah, hapus data toko
+- Informasi toko: nama, alamat, nomor telepon
+
+## Backup & Restore
+
+- Export/import data (barang, stok, transaksi)
+- Backup manual atau otomatis
+
+## Activity Logs (Audit Trail)
+
+- Catat aktivitas penting:
+
+  - login/logout
+  - transaksi kasir
+  - update stok
+  - penghapusan data
+
+- Log detail: user, aksi, toko, waktu, deskripsi

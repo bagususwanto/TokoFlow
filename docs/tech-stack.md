@@ -1,26 +1,49 @@
-# Teknologi yang Digunakan
+# Tech Stack - Sistem Kasir & Stok Multi-Toko
 
-## Frontend
+## 1. Frontend
 
-- **React (Vite)** — Framework utama tampilan.
-- **MaterialUI** — Komponen UI cepat dan responsif.
-- **Axios** — Komunikasi dengan API.
-- **React Router** — Navigasi antar halaman.
+- **Framework:** React.js
+- **UI Library:** Material-UI (MUI)
+- **State Management:** React Context / Redux (opsional)
+- **Charting / Visualization:** MUI Charts, Recharts
+- **Form & Validation:** React Hook Form, Yup
+- **Routing:** React Router DOM
+- **Build Tool:** Vite
+- **PDF / Print:** jsPDF, print-js untuk cetak struk
+- **PWA / Mobile Friendly:** optional, service worker untuk offline mode
 
-## Backend
+## 2. Backend
 
-- **Express.js (Node.js)** — REST API server.
-- **Sequelize ORM** — Abstraksi database.
-- **JWT Authentication** — Sistem login aman.
-- **bcrypt** — Hash password.
+- **Runtime Environment:** Node.js
+- **Framework:** Express.js
+- **Authentication:** JWT (Access Token + Refresh Token)
+- **Database ORM:** Sequelize (untuk PostgreSQL)
+- **Logging:** Winston / Morgan
+- **File Upload / Excel Handling:** Multer, ExcelJS
+- **Task Scheduling / Cron:** node-cron
+- **API Documentation:** Swagger (opsional)
 
-## Database
+## 3. Database
 
-- **PostgreSQL** — Database relasional stabil dan aman.
+- **Primary Database:** PostgreSQL
+- **Design / Diagram:** DBML untuk desain, ERD konseptual untuk referensi
+- **Backup & Restore:** Manual via DB tools / script, optional auto backup cron job
 
-## Tools & Deploy
+## 4. DevOps / Tools (untuk deployment di Render)
 
-- **Render** — Hosting otomatis untuk frontend dan backend.
-- **GitHub / GitLab** — Source control dan auto deploy trigger.
-- **VS Code** — Lingkungan pengembangan utama.
-- **Node.js + PostgreSQL (Render Services)** — Backend API dan database.
+- **Version Control:** GitHub (Render langsung integrasi dengan repo GitHub)
+- **Package Manager:** npm / yarn
+- **Build & Deployment:**
+  - Frontend: build React → deploy ke Static Site di Render
+  - Backend: deploy Express server di Render Web Service
+  - Gunakan environment variables di dashboard Render
+- **Process Management:** Render menangani auto-restart & scaling, jadi PM2 opsional
+- **Testing:** Jest / React Testing Library / Supertest untuk API sebelum deploy
+- **Environment Variables:** diset di dashboard Render (`.env` tidak di-push ke repo)
+- **Editor / IDE:** VS Code
+
+## 5. Optional Integrations
+
+- **Payment Gateway:** QRIS / Midtrans / Stripe (opsional)
+- **Marketplace / API Integrations:** optional untuk fitur ekspansi
+- **Notifications:** Email (Nodemailer) / WhatsApp API

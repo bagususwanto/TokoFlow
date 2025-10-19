@@ -1,114 +1,53 @@
-# 🏪 Sistem Kasir & Stok Toko Kecil
+# Sistem Kasir & Stok - Multi Toko
 
-Aplikasi berbasis web untuk membantu toko kecil dalam mengelola penjualan dan stok barang secara efisien.  
-Dibangun menggunakan **React (Vite)** untuk frontend dan **Express.js + PostgreSQL** untuk backend.
+## 📌 Deskripsi
 
----
+Sistem ini adalah aplikasi Point of Sale (POS) berbasis web yang mendukung multi-cabang toko dengan manajemen stok, transaksi penjualan, dan laporan real-time. Sistem dirancang untuk usaha retail/minimarket agar operasional lebih efisien, akurat, dan terkontrol.
 
-## 🚀 Fitur Utama
+## ⚡ Fitur Utama
 
-- 💰 **Transaksi Kasir** — Pencatatan penjualan harian.
-- 📦 **Manajemen Stok** — Monitoring keluar/masuk barang.
-- 👥 **User Role** — Admin, Kasir, dan Manajer.
-- 📊 **Laporan Penjualan** — Rekap data dalam Excel / PDF.
-- 🔒 **Login Aman** — Autentikasi JWT.
+- Manajemen barang & kategori
+- Stok barang per toko dengan notifikasi minimal stock
+- Transaksi kasir (POS) + cetak struk
+- Multi-toko & role-based access (Owner, Admin, Kasir)
+- Laporan penjualan harian, mingguan, bulanan
+- Backup & restore database
+- Activity logs / audit trail
 
----
+## 🧰 Tech Stack
 
-## 🧩 Struktur Proyek
+- **Frontend:** React.js, Material-UI, MUI Charts
+- **Backend:** Node.js, Express.js, Sequelize
+- **Database:** PostgreSQL
+- **Authentication:** JWT
+- **DevOps / Deployment:** GitHub, Render, dotenv
+- **Testing:** Jest, React Testing Library, Supertest
 
-store-pos/
-┣ backend/
-┃ ┣ src/
-┃ ┣ package.json
-┃ ┣ .env.example
-┃ ┗ README.md
-┣ frontend/
-┃ ┣ src/
-┃ ┣ package.json
-┃ ┣ vite.config.js
-┃ ┗ README.md
-┣ docs/
-┃ ┣ overview.md
-┃ ┣ features.md
-┃ ┣ tech-stack.md
-┃ ┣ architecture.md
-┃ ┣ database-schema.md
-┃ ┣ api-spec.md
-┃ ┣ ui-wireframe.md
-┃ ┣ user-flow.md
-┃ ┣ installation.md
-┃ ┣ usage.md
-┃ ┣ deployment.md
-┃ ┣ maintenance.md
-┃ ┗ readme.md
-┣ LICENSE
-┣ .gitignore
-┗ README.md ← ringkasan utama proyek
+## 📂 Struktur Folder
 
----
+- `/frontend` - Source code frontend React
+- `/backend` - Source code backend Express & Sequelize
+- `/doc` - Dokumentasi sistem (Overview, Features, Use Case, ERD, API Spec, Tech Stack, Roadmap)
+- `/public` - Asset statis frontend
+- `/scripts` - Script tambahan (backup, migration, seeding)
 
-## 🧱 Teknologi
+## 📚 Dokumentasi
 
-- **Frontend:** React + MaterialUI + Axios + Vite
-- **Backend:** Express.js + Sequelize + PostgreSQL
-- **Tools:** VScode, Render (deploy)
+Untuk dokumentasi lengkap, lihat folder [doc](./doc) atau buka GitHub Pages dari folder tersebut.
 
----
+## 🚀 Deployment
 
-## ⚙️ Instalasi Cepat
+1. Setup database (PostgreSQL)
+2. Set environment variables di `.env`
+3. Jalankan backend: `npm install && npm start` di folder `/backend`
+4. Build frontend: `npm install && npm run build` di folder `/frontend` → deploy ke Render Static Site atau server pilihan
+5. Integrasi backend & frontend sesuai environment
 
-**Clone repository**
+## 👨‍💻 Kontributor
 
-```bash
-git clone https://github.com/username/store-pos.git
-cd store-pos
-```
-
-**Setup backend**
-
-```bash
-cd backend
-cp .env.example .env
-npm install
-npm run dev
-```
-
-**Setup frontend**
-
-```bash
-cd ../frontend
-npm install
-npm run dev
-```
-
-> Lihat panduan lengkap di: `/docs/installation.md`
-
----
-
-## 🤝 Kontribusi
-
-1. Fork repository ini.
-2. Buat branch fitur baru (git checkout -b fitur-baru).
-3. Commit perubahan (git commit -m 'Tambah fitur baru').
-4. Push ke branch (git push origin fitur-baru).
-5. Ajukan Pull Request.
-
----
+- Bagus Uswanto (Developer)
 
 ## 📄 Lisensi
 
 Lisensi **Proprietary (Non-Free)** © 2025
 Seluruh kode dan dokumentasi tidak boleh digunakan, dimodifikasi, atau disebarkan tanpa izin tertulis dari pemilik proyek.
-
----
-
-## 👨‍💻 Pengembang
-
-**Nama:** Bagus Uswanto
-**Peran:** Full Stack Developer
-**Tahun:** 2025
-
-```
-
-```
