@@ -28,7 +28,6 @@ Sistem ini adalah aplikasi Point of Sale (POS) berbasis web yang mendukung multi
 - `/frontend` - Source code frontend React
 - `/backend` - Source code backend Express & Sequelize
 - `/doc` - Dokumentasi sistem (Overview, Features, Use Case, ERD, API Spec, Tech Stack, Roadmap)
-- `/public` - Asset statis frontend
 - `/scripts` - Script tambahan (backup, migration, seeding)
 
 ## 📚 Dokumentasi
