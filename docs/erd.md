@@ -22,7 +22,10 @@ Dokumen ini menjelaskan Entity Relationship Diagram (ERD) untuk sistem kasir dan
 
 ## 3. Diagram ERD (Level Konseptual)
 
-```mermaid
+**Mermaid:**
+https://www.mermaid.live
+
+```
 erDiagram
     USER ||--o{ TRANSACTION : creates
     USER ||--o{ STOCK_MOVEMENT : adjusts
@@ -43,12 +46,15 @@ erDiagram
     STORE ||--o{ STOCK_MOVEMENT : happens
 ```
 
+![Entity Relationship Diagram](assets/erd.svg)
+
 ## 4. DBML Version
 
 Use DBML to define the database structure
 Docs: https://dbml.dbdiagram.io/docs
 
-```dbml
+```
+dbml
 Table users {
   id uuid [primary key]
   username varchar [not null]

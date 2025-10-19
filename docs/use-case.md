@@ -182,6 +182,72 @@
 ### Diagram
 
 **PlantUML:**
+https://www.plantuml.com/sequence
+
+```
+@startuml
+title Sistem Kasir & Stok Multi-Toko
+
+actor Owner
+actor Admin
+actor Kasir
+actor Customer
+actor "System Scheduler" as Scheduler
+
+rectangle "Sistem Kasir & Stok Multi-Toko" {
+
+(Login) as UC_Login
+
+(Manage Products) as UC_ManageProducts
+(Manage Categories) as UC_ManageCategories
+(Stock Adjustment) as UC_StockAdjust
+(Sales Transaction) as UC_Sales
+(Generate Invoice) as UC_Invoice
+(Print Receipt) as UC_Print
+(View Reports) as UC_Reports
+(View Activity Logs) as UC_Logs
+(Write Activity Log) as UC_WriteLog
+(User & Role Management) as UC_UserRole
+(Store Management) as UC_Store
+(Backup & Restore) as UC_Backup
+(Auto Backup) as UC_AutoBackup
+}
+
+' Relasi aktor ke use case
+Owner --> UC_Login
+Admin --> UC_Login
+Kasir --> UC_Login
+Customer --> UC_Sales
+
+Owner --> UC_ManageProducts
+Admin --> UC_ManageProducts
+Owner --> UC_ManageCategories
+Admin --> UC_ManageCategories
+
+Kasir --> UC_Sales
+Owner --> UC_Reports
+Admin --> UC_Reports
+Owner --> UC_StockAdjust
+Admin --> UC_StockAdjust
+
+Owner --> UC_UserRole
+Owner --> UC_Store
+Owner --> UC_Backup
+Scheduler --> UC_AutoBackup
+
+Owner --> UC_Logs
+Admin --> UC_Logs
+
+' Include/Extend
+UC_Sales --> UC_Invoice : <<include>>
+UC_Sales ..> UC_Print : <<extend>>
+
+UC_ManageProducts --> UC_WriteLog : <<include>>
+UC_StockAdjust --> UC_WriteLog : <<include>>
+
+UC_Backup ..> UC_AutoBackup : <<extend>>
+@enduml
+```
 
 ![Use Case Diagram](assets/use-case.svg)
 

@@ -16,5 +16,6 @@ Berikut daftar file dokumentasi yang ada di folder ini (dengan link navigasi unt
 ## 🛠️ Tools Dokumentasi
 
 - Markdown (.md) untuk semua dokumen
-- Mermaid untuk diagram Use Case dan ERD
+- Mermaid untuk diagram ERD
 - DBML untuk visualisasi dan desain database
+- PlantUML untuk diagram use case
