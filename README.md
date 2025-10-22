@@ -1,51 +1,65 @@
-# Sistem Kasir & Stok - Multi Toko
+# TokoFlow Project
 
-## 📌 Deskripsi
+Sistem TokoFlow adalah aplikasi kasir dan manajemen stok untuk bisnis multi-toko.
 
-Sistem ini adalah aplikasi Point of Sale (POS) berbasis web yang mendukung multi-cabang toko dengan manajemen stok, transaksi penjualan, dan laporan real-time. Sistem dirancang untuk usaha retail/minimarket agar operasional lebih efisien, akurat, dan terkontrol.
+## 📂 Struktur Project
 
-## ⚡ Fitur Utama
+```
+root/
+│
+├─ frontend/       # Source code frontend React + Material-UI
+├─ backend/        # Source code backend Node.js + Express + Sequelize
+├─ docs/           # Dokumentasi proyek
+│   ├─ overview.md
+│   ├─ features.md
+│   ├─ ui-flow.md
+│   ├─ erd.md
+│   ├─ api-spec.md
+│   └─ use-case.md
+├─ README.md       # Dokumentasi project (root)
+└─ LICENSE         # Lisensi proyek
+```
 
-- Manajemen barang & kategori
-- Stok barang per toko dengan notifikasi minimal stock
-- Transaksi kasir (POS) + cetak struk
-- Multi-toko & role-based access (Owner, Admin, Kasir)
-- Laporan penjualan harian, mingguan, bulanan
-- Backup & restore database
-- Activity logs / audit trail
+## 🧰 Teknologi
 
-## 🧰 Tech Stack
-
-- **Frontend:** React.js, Material-UI, MUI Charts
-- **Backend:** Node.js, Express.js, Sequelize
+- **Frontend:** React + Material-UI
+- **Backend:** Node.js + Express + Sequelize
 - **Database:** PostgreSQL
-- **Authentication:** JWT
-- **DevOps / Deployment:** GitHub, Render, dotenv
-- **Testing:** Jest, React Testing Library, Supertest
+- **Autentikasi:** JWT
 
-## 📂 Struktur Folder
+## 🚀 Cara Menjalankan
 
-- `/frontend` - Source code frontend React
-- `/backend` - Source code backend Express & Sequelize
-- `/doc` - Dokumentasi sistem (Overview, Features, Use Case, ERD, API Spec, Tech Stack, Roadmap)
+### Backend
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm start
+```
 
 ## 📚 Dokumentasi
 
-Untuk dokumentasi lengkap, lihat folder [doc](./doc) atau buka GitHub Pages dari folder tersebut.
+Semua dokumentasi ada di folder `docs/`:
 
-## 🚀 Deployment
+- `overview.md` - Ringkasan sistem
+- `features.md` - Fitur utama & dependency
+- `ui-flow.md` - Alur navigasi user
+- `erd.md` - Skema database & relasi
+- `api-spec.md` - Spesifikasi API dengan contoh
+- `use-case.md` - Use case singkat per actor
 
-1. Setup database (PostgreSQL)
-2. Set environment variables di `.env`
-3. Jalankan backend: `npm install && npm start` di folder `/backend`
-4. Build frontend: `npm install && npm run build` di folder `/frontend` → deploy ke Render Static Site atau server pilihan
-5. Integrasi backend & frontend sesuai environment
-
-## 👨‍💻 Kontributor
+## 👨‍💻 Contributors
 
 - Bagus Uswanto (Developer)
 
-## 📄 Lisensi
+## 📄 License
 
-Lisensi **Proprietary (Non-Free)** © 2025
-Seluruh kode dan dokumentasi tidak boleh digunakan, dimodifikasi, atau disebarkan tanpa izin tertulis dari pemilik proyek.
+MIT License | Copyright (c) 2025 Bagus Uswanto

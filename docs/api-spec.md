@@ -1,180 +1,301 @@
-# Spesifikasi API - Sistem Kasir & Stok Multi-Toko
+# API Spec - TokoFlow (with Examples)
 
-## 1. Autentikasi
+Dokumen API Spec ini mendukung pengembangan backend (Express + Sequelize) dan integrasi frontend (React), **MVP fokus**. Ditambahkan contoh request/response.
 
-### POST /api/auth/login
+---
 
-- **Request:**
+## Konvensi Umum
+
+- Base URL: `/api/v1`
+- Autentikasi: **Bearer token (JWT)**
+- Format request/response: `application/json`
+- Pagination: `?page=1&limit=20`
+- Sorting: `?sort=field` atau `?sort=-field`
+- Filter: query params sesuai resource
+- Error: `{ code, message, details? }`
+
+---
+
+## 1. Authentication
+
+### POST /auth/login
+
+**Request:**
 
 ```json
 {
-  "username": "string",
-  "password": "string"
+  "username": "admin",
+  "password": "admin123"
 }
 ```
 
-- **Response:**
+**Response 200:**
 
 ```json
 {
-  "access_token": "jwt_token",
-  "refresh_token": "jwt_refresh_token",
+  "accessToken": "eyJhbGci...",
+  "refreshToken": "eyJhbGci...",
   "user": {
-    "id": "uuid",
-    "username": "string",
-    "role": "Owner/Admin/Kasir",
-    "store_id": "uuid"
+    "id": "uuid-1234",
+    "username": "admin",
+    "role": "owner",
+    "storeId": null
   }
 }
 ```
 
-### POST /api/auth/refresh
+### POST /auth/refresh
 
-- **Request:**
+**Request:**
+
+```json
+{ "refreshToken": "eyJhbGci..." }
+```
+
+**Response 200:**
+
+```json
+{ "accessToken": "new-access-token", "refreshToken": "new-refresh-token" }
+```
+
+### POST /auth/logout
+
+**Request:**
+
+```json
+{ "refreshToken": "eyJhbGci..." }
+```
+
+**Response 204:** No Content
+
+---
+
+## 2. Users
+
+### GET /users
+
+**Query:** `?page=1&limit=10&role=kasir`
+**Response 200:**
 
 ```json
 {
-  "refresh_token": "jwt_refresh_token"
+  "data": [
+    {
+      "id": "uuid-1",
+      "username": "kasir1",
+      "role": "kasir",
+      "storeId": "store-uuid"
+    }
+  ],
+  "meta": { "page": 1, "limit": 10, "total": 50 }
 }
 ```
 
-- **Response:**
+### POST /users
+
+**Request:**
 
 ```json
 {
-  "access_token": "jwt_token"
+  "username": "kasir2",
+  "password": "123456",
+  "fullName": "Kasir Dua",
+  "role": "kasir",
+  "storeId": "store-uuid",
+  "isActive": true
 }
 ```
 
-## 2. User Management
-
-### GET /api/users
-
-- **Query Params:** `store_id`, `role`
-- **Response:** List user dengan role dan toko.
-
-### POST /api/users
-
-- **Request Body:**
+**Response 201:**
 
 ```json
 {
-  "username": "string",
-  "password": "string",
-  "role_id": "uuid",
-  "store_id": "uuid"
+  "id": "uuid-2",
+  "username": "kasir2",
+  "role": "kasir",
+  "storeId": "store-uuid",
+  "isActive": true
 }
 ```
 
-- **Response:** User baru berhasil dibuat.
+### PUT /users/:id
 
-### PUT /api/users/:id
+**Request:**
 
-- **Request Body:** Update data user.
-- **Response:** User berhasil diperbarui.
+```json
+{ "fullName": "Kasir 2 Updated" }
+```
 
-### DELETE /api/users/:id
+**Response 200:** Updated user object
 
-- **Response:** User berhasil dihapus.
+### DELETE /users/:id
 
-## 3. Store Management
+**Response 204:** No Content
 
-### GET /api/stores
+---
 
-- **Response:** List semua toko.
+## 3. Stores
 
-### POST /api/stores
+### POST /stores
 
-- **Request Body:** Tambah toko baru.
+**Request:**
 
-### PUT /api/stores/:id
+```json
+{ "name": "Toko A", "address": "Jl. Merdeka 1" }
+```
 
-- **Request Body:** Update data toko.
+**Response 201:**
 
-### DELETE /api/stores/:id
+```json
+{ "id": "store-uuid", "name": "Toko A", "address": "Jl. Merdeka 1" }
+```
 
-- **Response:** Toko berhasil dihapus.
+---
 
-## 4. Barang (Product)
+## 4. Products
 
-### GET /api/products
+### POST /products
 
-- **Query Params:** `store_id`, `category_id`
-- **Response:** List produk per toko.
+**Request:**
 
-### POST /api/products
+```json
+{
+  "sku": "PRD001",
+  "name": "Produk A",
+  "categoryId": null,
+  "unit": "pcs",
+  "costPrice": 5000,
+  "salePrice": 8000,
+  "barcode": "1234567890123",
+  "isActive": true
+}
+```
 
-- **Request Body:** Tambah produk baru.
+**Response 201:**
 
-### PUT /api/products/:id
+```json
+{
+  "id": "product-uuid",
+  "sku": "PRD001",
+  "name": "Produk A",
+  "unit": "pcs",
+  "costPrice": 5000,
+  "salePrice": 8000,
+  "isActive": true
+}
+```
 
-- **Request Body:** Update produk.
+---
 
-### DELETE /api/products/:id
+## 5. Inventory
 
-- **Response:** Produk berhasil dihapus.
+### POST /inventory
 
-## 5. Kategori Barang (Category)
+**Request:**
 
-CRUD endpoint mirip products.
+```json
+{
+  "storeId": "store-uuid",
+  "productId": "product-uuid",
+  "type": "IN",
+  "quantity": 100,
+  "reason": "Initial stock"
+}
+```
 
-## 6. Stok (Stock & Stock Movement)
+**Response 201:**
 
-### GET /api/stocks
+```json
+{
+  "id": "inventory-move-uuid",
+  "storeId": "store-uuid",
+  "productId": "product-uuid",
+  "type": "IN",
+  "quantity": 100
+}
+```
 
-- **Query Params:** `store_id`, `product_id`
-- **Response:** Stok saat ini.
+---
 
-### POST /api/stocks/adjust
+## 6. POS / Sales
 
-- **Request Body:** Penyesuaian stok.
-- **Response:** Stok berhasil diperbarui.
+### POST /sales
 
-### GET /api/stock-movements
+**Request:**
 
-- **Response:** Riwayat stok per toko.
+```json
+{
+  "storeId": "store-uuid",
+  "userId": "user-uuid",
+  "items": [
+    {
+      "productId": "product-uuid",
+      "sku": "PRD001",
+      "name": "Produk A",
+      "unitPrice": 8000,
+      "quantity": 2,
+      "discount": 0
+    }
+  ],
+  "payment": { "method": "CASH", "amount": 16000, "change": 0 },
+  "notes": "Transaksi contoh",
+  "status": "SAVED"
+}
+```
 
-## 7. Transaksi (Sales)
+**Response 201:**
 
-### GET /api/transactions
+```json
+{
+  "id": "sale-uuid",
+  "receiptNo": "INV/2025/10/001",
+  "total": 16000,
+  "createdAt": "2025-10-21T12:00:00Z"
+}
+```
 
-- **Query Params:** `store_id`, `date_from`, `date_to`
+---
 
-### POST /api/transactions
+## 7. Reports
 
-- **Request Body:** Input transaksi baru (items, qty, payment)
-- **Response:** Transaksi berhasil dibuat, nomor invoice di-generate.
+### GET /reports/daily-sales?storeId=store-uuid&date=2025-10-21
 
-### GET /api/transactions/:id
+**Response 200:**
 
-- **Response:** Detail transaksi.
+```json
+{
+  "storeId": "store-uuid",
+  "date": "2025-10-21",
+  "totalSales": 16000,
+  "transactionsCount": 1
+}
+```
 
-## 8. Laporan (Reports)
+---
 
-### GET /api/reports/sales
+## 8. Audit Trail
 
-- **Query Params:** `store_id`, `date_from`, `date_to`, `kasir_id`
-- **Response:** Data laporan, top produk, grafik.
+### GET /audit?page=1&limit=10
 
-### GET /api/reports/export
+**Response 200:**
 
-- **Query Params:** `store_id`, `date_from`, `date_to`
-- **Response:** File Excel (.xlsx)
+```json
+{
+  "data": [
+    {
+      "id": "log-uuid",
+      "userId": "user-uuid",
+      "module": "PRODUCT",
+      "action": "UPDATE",
+      "before": { "salePrice": 5000 },
+      "after": { "salePrice": 8000 },
+      "createdAt": "2025-10-21T10:05:00Z"
+    }
+  ],
+  "meta": { "page": 1, "limit": 10, "total": 50 }
+}
+```
 
-## 9. Backup & Restore
+---
 
-### POST /api/backup
-
-- **Response:** File backup database.
-
-### POST /api/restore
-
-- **Request Body:** Upload file backup.
-- **Response:** Database berhasil dikembalikan.
-
-## 10. Activity Logs
-
-### GET /api/activity-logs
-
-- **Query Params:** `store_id`, `user_id`, `date_from`, `date_to`
-- **Response:** Riwayat aktivitas user (login, transaksi, update stok, dll.)
+Dokumen ini sudah termasuk **contoh request & response** untuk endpoint kunci. Bisa langsung dipakai sebagai referensi frontend atau testing API.

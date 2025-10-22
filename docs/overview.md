@@ -1,40 +1,59 @@
-# Sistem Kasir & Stok – Multi-Toko
+# Overview - TokoFlow
 
-## Overview
+## Ringkasan
 
-Sistem ini adalah aplikasi **Point of Sale (POS)** berbasis web yang mendukung **multi-cabang toko** dengan fitur **manajemen stok**, **transaksi penjualan**, dan **laporan real-time**. Sistem dirancang untuk usaha retail/minimarket agar operasional lebih **efisien**, **akurat**, dan **terkontrol** tanpa pencatatan manual.
+TokoFlow adalah aplikasi yang dirancang untuk membantu proses penjualan, manajemen stok, dan pengelolaan transaksi pada bisnis yang memiliki lebih dari satu toko. Sistem ini mendukung pencatatan penjualan secara real-time, pengecekan stok antar toko, serta laporan transaksi untuk mendukung pengambilan keputusan.
 
-### Tujuan
+## Tujuan Sistem
 
-- Menggantikan pencatatan manual penjualan dan stok
-- Meminimalkan kesalahan input dan kehilangan data
-- Menyediakan laporan penjualan otomatis dan real-time
-- Meningkatkan kontrol stok barang dengan riwayat pergerakan stok
-- Mendukung ekspansi bisnis dengan model multi-cabang toko
+- Mempermudah pencatatan penjualan dan pergerakan stok barang.
+- Mengurangi kesalahan pencatatan manual.
+- Mempercepat proses transaksi kasir.
+- Menyediakan laporan penjualan dan stok yang akurat.
+- Mendukung kolaborasi antar user dengan role berbeda.
 
-### Pengguna Sistem
+## Ruang Lingkup
 
-| Role      | Hak Akses Utama                                      |
-| --------- | ---------------------------------------------------- |
-| **Owner** | Full akses semua data & pengaturan sistem            |
-| **Admin** | Kelola barang, stok, dan laporan untuk toko tertentu |
-| **Kasir** | Input transaksi penjualan                            |
+Sistem ini mencakup fitur utama:
 
-### Lingkup Sistem
+- Multi-user & Multi-store
+- Manajemen Produk & Kategori
+- Manajemen Stok & Transfer Stok antar Toko
+- Point of Sales (POS)
+- Manajemen Pelanggan **(Next Phase)**
+- Manajemen Supplier **(Next Phase)**
+- Purchase Order **(Next Phase)**
+- Laporan Penjualan
+- Riwayat Aktivitas
+- Hak Akses & Role Management
 
-- Penjualan kasir berbasis web (**POS**)
-- Pengelolaan stok barang per toko
-- Manajemen toko (**multi-store**)
-- Laporan penjualan otomatis
-- Log aktivitas (**audit trail**)
-- Role & hak akses pengguna
-- Backup & restore data
-- UI mobile-friendly
+## Peran Pengguna
 
-### Fitur Opsional (Fase Berikutnya)
+| Role  | Deskripsi                                    |
+| ----- | -------------------------------------------- |
+| Owner | Melihat laporan seluruh toko, mengelola user |
+| Admin | Mengelola produk, stok, dan laporan toko     |
+| Kasir | Melakukan transaksi penjualan                |
 
-- Sistem hutang piutang pelanggan (**account receivable**)
-- Return barang
-- Purchase order ke supplier
-- Offline mode (PWA)
-- Integrasi marketplace
+## Fitur Utama
+
+- Login & Autentikasi (JWT + Role Based Access Control)
+- Multi Store Management
+- Manajemen Produk & Stok
+- Penjualan (Point of Sale / POS)
+- Dashboard Penjualan & Notifikasi Stok
+- Riwayat Transaksi & Audit Log
+- Laporan Penjualan & Stok
+
+## Teknologi
+
+Sistem ini dikembangkan menggunakan stack modern:
+
+- Backend: Node.js (Express) + Sequelize ORM
+- Database: PostgreSQL
+- Frontend: React + Material-UI
+- Autentikasi: JWT
+
+---
+
+Dokumen ini berfungsi sebagai gambaran awal sistem dan menjadi referensi utama dalam pengembangan.

@@ -1,221 +1,124 @@
-# ERD - Sistem Kasir Multi Toko
+# ERD - TokoFlow
 
-## 1. Tujuan
+Dokumen ini menjelaskan **Entity Relationship Diagram (ERD)** sistem TokoFlow, mencakup modul utama: Users, Stores, Products, Inventory, Sales, dan Audit Trail.
 
-Dokumen ini menjelaskan Entity Relationship Diagram (ERD) untuk sistem kasir dan manajemen stok multi toko. ERD ini menggambarkan struktur database pada level konseptual/logical sebelum diimplementasikan menjadi schema fisik.
+---
 
-## 2. Daftar Entitas Utama (Entities)
+## 1. Entities & Relationships
 
-- User
-- Store (Toko)
-- Role
-- Product
-- Category
-- Stock
-- Transaction
-- Transaction Item
-- Customer
-- Supplier
-- Purchase Order
-- Purchase Order Item
-- Stock Movement
+### 1.1 Users
 
-## 3. Diagram ERD (Level Konseptual)
+| Column    | Type     | PK/FK/Notes                |
+| --------- | -------- | -------------------------- |
+| id        | UUID     | PK                         |
+| username  | string   | unique                     |
+| password  | string   | hashed                     |
+| fullName  | string   | -                          |
+| role      | enum     | owner/admin/kasir          |
+| storeId   | UUID     | FK -> stores.id (nullable) |
+| isActive  | boolean  | default true               |
+| createdAt | datetime | -                          |
+| updatedAt | datetime | -                          |
 
-**Mermaid:**
-https://www.mermaid.live
+### 1.2 Stores
 
-```
-erDiagram
-    USER ||--o{ TRANSACTION : creates
-    USER ||--o{ STOCK_MOVEMENT : adjusts
-    ROLE ||--o{ USER : has
-    STORE ||--o{ USER : employs
-    STORE ||--o{ PRODUCT : owns
-    CATEGORY ||--o{ PRODUCT : groups
-    PRODUCT ||--o{ STOCK : has
-    STORE ||--o{ STOCK : has
-    TRANSACTION ||--|{ TRANSACTION_ITEM : contains
-    PRODUCT ||--o{ TRANSACTION_ITEM : includes
-    CUSTOMER ||--o{ TRANSACTION : buys
-    SUPPLIER ||--o{ PURCHASE_ORDER : provides
-    PURCHASE_ORDER ||--|{ PURCHASE_ORDER_ITEM : includes
-    PRODUCT ||--o{ PURCHASE_ORDER_ITEM : ordered
-    STORE ||--o{ PURCHASE_ORDER : requests
-    PRODUCT ||--o{ STOCK_MOVEMENT : moved
-    STORE ||--o{ STOCK_MOVEMENT : happens
-```
+| Column    | Type     | PK/FK/Notes |
+| --------- | -------- | ----------- |
+| id        | UUID     | PK          |
+| name      | string   | -           |
+| address   | string   | -           |
+| phone     | string   | optional    |
+| createdAt | datetime | -           |
+| updatedAt | datetime | -           |
 
-![Entity Relationship Diagram](assets/erd.svg)
+### 1.3 Products
 
-## 4. DBML Version
+| Column     | Type     | PK/FK/Notes              |
+| ---------- | -------- | ------------------------ |
+| id         | UUID     | PK                       |
+| sku        | string   | unique                   |
+| name       | string   | -                        |
+| categoryId | UUID     | FK -> categories.id/null |
+| unit       | string   | pcs/box/pack             |
+| costPrice  | number   | -                        |
+| salePrice  | number   | -                        |
+| barcode    | string   | optional                 |
+| isActive   | boolean  | default true             |
+| createdAt  | datetime | -                        |
+| updatedAt  | datetime | -                        |
 
-Use DBML to define the database structure
-Docs: https://dbml.dbdiagram.io/docs
+### 1.4 Inventory
 
-```
-dbml
-Table users {
-  id uuid [primary key]
-  username varchar [not null]
-  password_hash varchar [not null]
-  full_name varchar
-  email varchar
-  phone varchar
-  role_id uuid [not null]
-  store_id uuid
-  status varchar [default: 'active']
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+| Column    | Type     | PK/FK/Notes       |
+| --------- | -------- | ----------------- |
+| id        | UUID     | PK                |
+| storeId   | UUID     | FK -> stores.id   |
+| productId | UUID     | FK -> products.id |
+| type      | enum     | IN/OUT/ADJUST     |
+| quantity  | number   | -                 |
+| reason    | string   | optional          |
+| reference | string   | optional          |
+| createdAt | datetime | -                 |
 
-Table stores {
-  id uuid [primary key]
-  store_name varchar [not null]
-  address varchar
-  phone varchar
-  email varchar
-  status varchar [default: 'active']
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+### 1.5 Sales
 
-Table roles {
-  id uuid [primary key]
-  role_name varchar [not null]
-  description text
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+| Column    | Type     | PK/FK/Notes     |
+| --------- | -------- | --------------- |
+| id        | UUID     | PK              |
+| storeId   | UUID     | FK -> stores.id |
+| userId    | UUID     | FK -> users.id  |
+| total     | number   | -               |
+| status    | enum     | SAVED/DRAFT     |
+| notes     | string   | optional        |
+| createdAt | datetime | -               |
+| updatedAt | datetime | -               |
 
-Table categories {
-  id uuid [primary key]
-  category_name varchar [not null]
-  description text
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+#### Sales Details
 
-Table products {
-  id uuid [primary key]
-  store_id uuid [not null]
-  category_id uuid [not null]
-  product_name varchar [not null]
-  barcode varchar [not null]
-  price decimal
-  min_stock integer
-  status varchar [default: 'active']
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+| Column    | Type   | PK/FK/Notes         |
+| --------- | ------ | ------------------- |
+| id        | UUID   | PK                  |
+| saleId    | UUID   | FK -> sales.id      |
+| productId | UUID   | FK -> products.id   |
+| sku       | string | copied from product |
+| name      | string | copied from product |
+| unitPrice | number | -                   |
+| quantity  | number | -                   |
+| discount  | number | optional            |
 
-Table stock {
-  id uuid [primary key]
-  product_id uuid [not null]
-  store_id uuid [not null]
-  quantity_system integer
-  quantity_actual integer
-  quantity_actual_check integer
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+### 1.6 Audit Trail
 
-Table customers {
-  id uuid [primary key]
-  full_name varchar [not null]
-  phone varchar
-  email varchar
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+| Column    | Type     | PK/FK/Notes                       |
+| --------- | -------- | --------------------------------- |
+| id        | UUID     | PK                                |
+| userId    | UUID     | FK -> users.id                    |
+| module    | string   | PRODUCT/SALES/INVENTORY/AUTH      |
+| action    | string   | CREATE/UPDATE/DELETE/LOGIN/LOGOUT |
+| before    | JSON     | optional                          |
+| after     | JSON     | optional                          |
+| meta      | JSON     | ip, userAgent                     |
+| createdAt | datetime | -                                 |
 
-Table suppliers {
-  id uuid [primary key]
-  supplier_name varchar [not null]
-  contact_name varchar
-  phone varchar
-  email varchar
-  address varchar
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+### 1.7 Categories
 
-Table transactions {
-  id uuid [primary key]
-  user_id uuid [not null]
-  store_id uuid [not null]
-  customer_id uuid
-  transaction_date timestamp [not null]
-  total_amount decimal
-  payment_method varchar
-  invoice_number varchar
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+| Column    | Type     | PK/FK/Notes |
+| --------- | -------- | ----------- |
+| id        | UUID     | PK          |
+| name      | string   | unique      |
+| createdAt | datetime | -           |
+| updatedAt | datetime | -           |
 
-Table transaction_items {
-  id uuid [primary key]
-  transaction_id uuid [not null]
-  product_id uuid [not null]
-  quantity integer
-  price_per_unit decimal
-  subtotal decimal
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+---
 
-Table purchase_orders {
-  id uuid [primary key]
-  supplier_id uuid [not null]
-  store_id uuid [not null]
-  order_date timestamp
-  total_amount decimal
-  status varchar
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+## 2. Relationships
 
-Table purchase_order_items {
-  id uuid [primary key]
-  purchase_order_id uuid [not null]
-  product_id uuid [not null]
-  quantity integer
-  price_per_unit decimal
-  subtotal decimal
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+- **Users -> Stores**: Many-to-One (user belongs to a store, owner may have null)
+- **Products -> Categories**: Many-to-One (product belongs to category)
+- **Inventory -> Stores & Products**: Many-to-One (movement per store & product)
+- **Sales -> Stores & Users**: Many-to-One (sales belongs to store & created by user)
+- **SalesDetails -> Sales & Products**: Many-to-One
+- **Audit -> Users**: Many-to-One
 
-Table stock_movements {
-  id uuid [primary key]
-  product_id uuid [not null]
-  store_id uuid [not null]
-  movement_type varchar
-  quantity integer
-  reason text
-  created_by uuid [not null]
-  movement_date timestamp
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
-}
+---
 
-Ref: users.role_id > roles.id
-Ref: users.store_id > stores.id
-Ref: products.store_id > stores.id
-Ref: products.category_id > categories.id
-Ref: stock.product_id > products.id
-Ref: stock.store_id > stores.id
-Ref: transactions.user_id > users.id
-Ref: transactions.store_id > stores.id
-Ref: transactions.customer_id > customers.id
-Ref: transaction_items.transaction_id > transactions.id
-Ref: transaction_items.product_id > products.id
-Ref: purchase_orders.supplier_id > suppliers.id
-Ref: purchase_orders.store_id > stores.id
-Ref: purchase_order_items.purchase_order_id > purchase_orders.id
-Ref: purchase_order_items.product_id > products.id
-Ref: stock_movements.product_id > products.id
-Ref: stock_movements.store_id > stores.id
-Ref: stock_movements.created_by > users.id
-
-```
+Diagram ERD bisa divisualisasikan menggunakan tool seperti draw.io berdasarkan tabel dan relasi di atas.

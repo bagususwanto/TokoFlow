@@ -1,21 +1,27 @@
-# 📚 Dokumentasi Sistem Kasir & Stok - Multi Toko
+# TokoFlow Documentation
 
-## 📁 Struktur Dokumentasi
+Dokumentasi ini berisi semua referensi untuk pengembangan sistem TokoFlow.
 
-Berikut daftar file dokumentasi yang ada di folder ini (dengan link navigasi untuk GitHub Pages):
+## Struktur Dokumen
 
-- [overview.md](./overview.md) - Ringkasan dan tujuan sistem
-- [features.md](./features.md) - Fitur-fitur utama sistem
-- [ui-user-flow.md](./ui-user-flow.md) - Tampilan UI dan alur pengguna
-- [use-case.md](./use-case.md) - Use case diagram dan detail use case
-- [erd.md](./erd.md) - Entity Relationship Diagram (ERD) dan DBML
-- [api-spec.md](./api-spec.md) - Spesifikasi API lengkap
-- [tech-stack.md](./tech-stack.md) - Teknologi yang digunakan
-- [roadmap.md](./roadmap.md) - Roadmap pengembangan sistem
+| File                         | Deskripsi                                                          |
+| ---------------------------- | ------------------------------------------------------------------ |
+| [overview.md](./overview.md) | Ringkasan sistem, tujuan, ruang lingkup, peran pengguna, teknologi |
+| [features.md](./features.md) | Daftar modul & fitur utama, dependency antar fitur                 |
+| [ui-flow.md](./ui-flow.md)   | Alur navigasi user per modul (UI Flow)                             |
+| [erd.md](./erd.md)           | Entity Relationship Diagram (ERD) & DBML                           |
+| [api-spec.md](./api-spec.md) | Spesifikasi endpoint API dengan contoh request/response            |
+| [use-case.md](./use-case.md) | Use case versi singkat untuk actor & interaksi sistem              |
 
-## 🛠️ Tools Dokumentasi
+## Tujuan Dokumentasi
 
-- Markdown (.md) untuk semua dokumen
-- Mermaid untuk diagram ERD
-- DBML untuk visualisasi dan desain database
-- PlantUML untuk diagram use case
+- Menjadi panduan pengembangan backend & frontend
+- Referensi untuk testing & QA
+- Membantu onboarding developer baru
+
+## Navigasi Cepat
+
+- Buka dokumen sesuai modul yang ingin diimplementasikan
+- Ikuti dependency antar fitur seperti dijelaskan di `features.md`
+- Gunakan `ui-flow.md` dan `use-case.md` untuk memahami alur user
+- Gunakan `erd.md` & `api-spec.md` untuk implementasi backend & integrasi frontend
