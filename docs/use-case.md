@@ -1,49 +1,66 @@
 # Use Case - TokoFlow
 
-Dokumen ini menjelaskan interaksi utama antara user dengan sistem TokoFlow (MVP).
+## 1. Aktor Sistem
 
----
-
-## 1. Actors
-
-| Actor | Deskripsi                                               |
-| ----- | ------------------------------------------------------- |
-| Owner | Mengelola seluruh toko, melihat laporan, manajemen user |
-| Admin | Mengelola produk, stok, laporan toko tertentu           |
-| Kasir | Melakukan transaksi penjualan di POS                    |
-
----
+| Actor | Deskripsi                                                                                                                           |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Owner | Pemilik bisnis atau tenant utama yang mendaftar di sistem TokoFlow. Memiliki hak penuh untuk mengelola toko, pengguna, dan laporan. |
+| Admin | Pengelola toko tertentu yang bertanggung jawab terhadap produk, stok, dan laporan transaksi di toko yang ditugaskan.                |
+| Kasir | Pengguna operasional toko yang menjalankan transaksi penjualan harian di Point of Sale (POS).                                       |
 
 ## 2. Use Cases Utama
 
-| Use Case             | Actor             | Deskripsi                                                                      |
-| -------------------- | ----------------- | ------------------------------------------------------------------------------ |
-| Login                | Owner/Admin/Kasir | User masuk ke sistem menggunakan username/password, mendapat JWT token         |
-| Dashboard            | Owner/Admin       | Melihat ringkasan penjualan, stok rendah, dan quick action                     |
-| Manage Users         | Owner/Admin       | Tambah, edit, assign role, assign toko, deactivate user                        |
-| Manage Stores        | Owner             | CRUD data toko dan assign user ke toko                                         |
-| Manage Products      | Admin             | CRUD produk, atur kategori, harga, barcode, status aktif                       |
-| Inventory Management | Admin             | Stock In/Out/Adjustment, monitoring stok per toko                              |
-| POS Transaction      | Kasir             | Cari produk, add to cart, input qty, pembayaran, simpan transaksi, cetak struk |
-| Reports              | Owner/Admin       | Lihat laporan harian/bulanan, stock report, stock movement                     |
-| Audit Trail          | Owner/Admin       | Monitor user activity, data change, stock mutation, transaction log            |
+| Use Case                          | Actor        | Deskripsi                                                                                                                        |
+| --------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| Registrasi & Onboarding Awal      | Owner        | Owner mendaftar akun baru di TokoFlow, lalu menjalani proses onboarding untuk membuat toko pertama, produk awal, dan user kasir. |
+| Login & Autentikasi               | Semua        | Pengguna masuk menggunakan username & password, sistem memberikan JWT access token dan refresh token.                            |
+| Dashboard Penjualan               | Owner, Admin | Menampilkan ringkasan penjualan, stok menipis, performa cabang, dan navigasi cepat ke fitur utama.                               |
+| Manajemen User                    | Owner        | Menambah, mengubah, menonaktifkan user serta menetapkan role (Admin/Kasir) dan toko masing-masing.                               |
+| Manajemen Toko (Store Management) | Owner        | Membuat cabang baru, memperbarui informasi toko, dan menugaskan user ke cabang.                                                  |
+| Manajemen Produk                  | Admin        | Menambah, mengedit, atau menonaktifkan produk; mengatur kategori, harga, satuan, dan barcode.                                    |
+| Manajemen Stok (Inventory)        | Admin        | Melakukan input stok awal, mutasi stok masuk/keluar, serta adjustment. Sistem otomatis merekam log stok.                         |
+| Transaksi Penjualan (POS)         | Kasir        | Melakukan transaksi penjualan, memilih produk, memasukkan jumlah, menerima pembayaran, menyimpan transaksi, dan mencetak struk.  |
+| Laporan & Analitik                | Owner, Admin | Melihat laporan penjualan harian/bulanan, stok per toko, pergerakan stok, dan performa cabang.                                   |
+| Audit Trail                       | Owner, Admin | Memonitor semua aktivitas sistem: login, perubahan data, transaksi, dan pergerakan stok.                                         |
 
----
+## 3. Alur Interaksi per Aktor
 
-## 3. Singkat Alur Interaksi per Actor
+### 🧾 Owner (Tenant Utama)
 
-### 3.1 Owner
+Registrasi → Onboarding (Setup Toko & User Pertama) → Dashboard → Kelola Produk & User → Pantau Laporan → Audit Aktivitas
 
-1. Login -> Dashboard -> Manage Users / Stores -> Reports / Audit Trail
+- Melalui onboarding, Owner langsung membuat toko pertama dan user kasir default.
+- Bisa menambah cabang dan pengguna baru kapan saja.
+- Melihat performa seluruh toko secara real-time di dashboard.
 
-### 3.2 Admin
+### 🏬 Admin (Pengelola Toko)
 
-1. Login -> Dashboard -> Manage Products -> Inventory -> Reports
+Login → Dashboard → Kelola Produk → Atur Stok → Lihat Laporan Toko
 
-### 3.3 Kasir
+- Mengatur produk, stok, dan memantau transaksi toko yang ditugaskan.
+- Melakukan stok in/out serta adjustment.
+- Bisa ekspor laporan ke Excel untuk kebutuhan internal toko.
 
-1. Login -> POS -> Cari produk -> Add to Cart -> Input Qty -> Payment -> Save Transaction -> Print Receipt
+### 💵 Kasir (Penjualan)
 
----
+Login → POS → Cari Produk → Tambah ke Keranjang → Pembayaran → Simpan Transaksi → Cetak Struk
 
-Dokumen ini versi singkat untuk cepat memahami **siapa melakukan apa** di sistem TokoFlow dan bisa langsung dipakai sebagai referensi implementasi frontend & backend.
+- Fokus pada transaksi cepat dan mudah.
+- Stok berkurang otomatis setelah transaksi berhasil.
+- Struk dapat dicetak atau dikirim digital (PDF).
+
+## 4. Use Case Tambahan (SaaS-Specific)
+
+| Use Case                           | Actor  | Deskripsi                                                                                      |
+| ---------------------------------- | ------ | ---------------------------------------------------------------------------------------------- |
+| Manajemen Langganan (Subscription) | Owner  | Mengatur paket SaaS (Gratis / Pro / Enterprise) dan pembayaran berlangganan.                   |
+| Multi-Tenant Isolation             | Sistem | Memastikan setiap tenant (owner) dan tokonya terisolasi secara data dan autentikasi.           |
+| Notifikasi Sistem                  | Semua  | Mengirimkan notifikasi stok menipis, transaksi sukses, dan pembaruan sistem melalui dashboard. |
+
+## 5. Catatan Implementasi
+
+- Sistem menggunakan Role-Based Access Control (RBAC) untuk membedakan hak akses.
+- Semua aktivitas penting dicatat di modul Audit Trail untuk kebutuhan pelacakan.
+- Proses onboarding membantu pengguna baru memahami sistem tanpa perlu pelatihan khusus.
+- Setiap tenant (owner) memiliki ruang data terpisah (multi-tenant structure).
+- Semua data transaksi, stok, dan user antar toko bersifat real-time sync.

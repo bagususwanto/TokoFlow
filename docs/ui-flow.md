@@ -1,142 +1,126 @@
-# UI Flow - TokoFlow
+# 🧭 UI Flow – TokoFlow
 
-Dokumen ini menjelaskan alur navigasi (user flow) pada sistem **TokoFlow** berdasarkan modul yang telah didefinisikan. Fokus utama dokumen ini adalah **MVP (Minimum Viable Product)** untuk mempermudah pengembangan sistem secara bertahap.
-
----
-
-## 1. Global Navigation Structure (MVP)
-
-| Menu Utama  | Deskripsi                                        |
-| ----------- | ------------------------------------------------ |
-| Login       | Autentikasi user menggunakan username & password |
-| Dashboard   | Ringkasan penjualan dan stok per toko            |
-| POS         | Transaksi penjualan (kasir)                      |
-| Produk      | Manajemen daftar produk                          |
-| Stok        | Monitoring & mutasi stok                         |
-| Users       | Manajemen user dan role                          |
-| Stores      | Manajemen cabang/toko                            |
-| Audit Trail | Log aktivitas sistem                             |
-| Logout      | Keluar dari sistem                               |
+Dokumen ini menjelaskan alur navigasi pengguna (**user flow**) pada sistem **TokoFlow SaaS**, aplikasi manajemen **penjualan & stok berbasis cloud** untuk UMKM.  
+Fokus utama mencakup **alur onboarding**, **penggunaan harian (POS, stok, laporan)**, serta **manajemen toko dan user**.
 
 ---
 
-## 2. Authentication Flow (Login + Session)
+## 🌐 1. Global Navigation Structure
 
-| Step | Halaman/Action                  | Kondisi                       |
-| ---- | ------------------------------- | ----------------------------- |
-| 1    | User membuka halaman Login      | -                             |
-| 2    | Input username dan password     | Validasi frontend             |
-| 3    | Klik tombol Login               | -                             |
-| 4    | Sistem kirim request ke backend | POST /auth/login              |
-| 5    | Jika berhasil                   | Simpan access + refresh token |
-| 6    | Redirect ke Dashboard           | -                             |
-| 7    | Jika gagal                      | Tampilkan pesan error         |
-
-**Session Handling**
-
-| Kondisi       | Behavior           |
-| ------------- | ------------------ |
-| Token expired | Auto refresh token |
-| Refresh gagal | Redirect ke Login  |
+| Menu Utama                   | Deskripsi                            |
+| ---------------------------- | ------------------------------------ |
+| **Dashboard**                | Ringkasan penjualan dan stok terkini |
+| **POS (Kasir)**              | Transaksi penjualan cepat            |
+| **Produk**                   | Manajemen daftar produk dan harga    |
+| **Stok**                     | Monitoring dan mutasi stok per toko  |
+| **Laporan**                  | Ringkasan penjualan dan stok         |
+| **User & Role**              | Kelola pengguna dan hak akses        |
+| **Toko (Store)**             | Tambah atau ubah cabang              |
+| **Audit Trail**              | Riwayat aktivitas pengguna           |
+| **Profil / Pengaturan Akun** | Kelola akun, langganan, dan logout   |
 
 ---
 
-## 3. Dashboard Flow (Owner/Admin/Kasir)
+## 🚀 2. Onboarding Flow (First-Time User)
 
-| Step | Halaman/Action      | Keterangan                                 |
-| ---- | ------------------- | ------------------------------------------ |
-| 1    | Redirect dari Login | Setelah autentikasi sukses                 |
-| 2    | Tampilkan ringkasan | Penjualan hari ini, transaksi, stok rendah |
-| 3    | Aksi cepat          | Navigasi ke POS, Produk, Stok              |
+| Step | Halaman / Aksi                | Keterangan                                               |
+| ---- | ----------------------------- | -------------------------------------------------------- |
+| 1    | Landing Page / Daftar Akun    | Pengguna mendaftar dengan email, nama toko, dan password |
+| 2    | Verifikasi Email _(opsional)_ | Konfirmasi untuk aktivasi akun                           |
+| 3    | Setup Awal Toko               | Isi nama toko, alamat, dan kategori usaha                |
+| 4    | Tambah Produk Pertama         | Minimal 1 produk untuk mulai transaksi                   |
+| 5    | Mulai POS / Dashboard         | Sistem otomatis menampilkan ringkasan toko               |
 
----
-
-## 4. POS Flow (Point of Sale)
-
-| Step | Halaman/Action   | Keterangan                         |
-| ---- | ---------------- | ---------------------------------- |
-| 1    | Masuk ke POS     | User otomatis terikat ke store-nya |
-| 2    | Cari produk      | Search by nama/SKU/barcode         |
-| 3    | Tambah ke cart   | Klik tombol "Tambah"               |
-| 4    | Edit kuantitas   | Input manual qty                   |
-| 5    | Input pembayaran | Cash / Transfer                    |
-| 6    | Simpan transaksi | POST /sales                        |
-| 7    | Cetak struk      | Optional                           |
+💡 _Tujuan onboarding: pengguna bisa mulai jualan dalam waktu < 5 menit._
 
 ---
 
-## 5. Product Management Flow
+## 🔐 3. Authentication & Session Flow
 
-| Step | Halaman/Action      | Keterangan                 |
-| ---- | ------------------- | -------------------------- |
-| 1    | Buka halaman Produk | Dari menu sidebar          |
-| 2    | Tambah Produk       | Nama, SKU, Kategori, Harga |
-| 3    | Validasi form       | SKU unik                   |
-| 4    | Simpan              | POST /products             |
-| 5    | Edit produk         | PUT /products/:id          |
-| 6    | Nonaktifkan produk  | Status aktif/nonaktif      |
-
----
-
-## 6. Inventory Flow (Stock Management)
-
-| Step | Halaman/Action     | Keterangan                        |
-| ---- | ------------------ | --------------------------------- |
-| 1    | Buka halaman Stok  | List stok per toko                |
-| 2    | Mutasi stok        | Stock In / Stock Out / Adjustment |
-| 3    | Isi produk & qty   | Required                          |
-| 4    | Simpan mutasi      | POST /inventory                   |
-| 5    | Catat riwayat stok | Tersimpan sebagai ledger          |
+| Step | Aksi                       | Kondisi                                    |
+| ---- | -------------------------- | ------------------------------------------ |
+| 1    | User membuka halaman Login | -                                          |
+| 2    | Input email & password     | Validasi frontend                          |
+| 3    | Klik “Masuk”               | `POST /auth/login`                         |
+| 4    | Jika berhasil              | Simpan token JWT + refresh                 |
+| 5    | Redirect ke Dashboard      | -                                          |
+| 6    | Jika gagal                 | Tampilkan pesan error                      |
+| 7    | Jika token expired         | Auto refresh, jika gagal → Logout otomatis |
 
 ---
 
-## 7. User & Role Management Flow
+## 📊 4. Dashboard Flow
 
-| Step | Halaman/Action       | Keterangan         |
-| ---- | -------------------- | ------------------ |
-| 1    | Buka User Management | Hanya Owner/Admin  |
-| 2    | Tambah user          | Username, password |
-| 3    | Assign role          | owner/admin/kasir  |
-| 4    | Assign ke toko       | Jika multi-store   |
-| 5    | Simpan               | POST /users        |
+| Step | Halaman / Aksi                     | Keterangan                                              |
+| ---- | ---------------------------------- | ------------------------------------------------------- |
+| 1    | User masuk ke Dashboard            | Setelah login                                           |
+| 2    | Lihat ringkasan penjualan hari ini | Total transaksi, omzet, stok rendah                     |
+| 3    | Navigasi cepat                     | Tombol “Mulai Jualan”, “Tambah Produk”, “Lihat Laporan” |
+| 4    | Notifikasi stok menipis            | Pop-up otomatis atau badge merah                        |
 
----
-
-## 8. Store Management Flow
-
-| Step | Halaman/Action        | Keterangan   |
-| ---- | --------------------- | ------------ |
-| 1    | Buka Store Management | Hanya Owner  |
-| 2    | Tambah store          | Nama, alamat |
-| 3    | Simpan                | POST /stores |
-| 4    | Assign user ke store  | Opsional     |
+💡 _Dashboard berfungsi sebagai pusat kontrol untuk pemilik toko._
 
 ---
 
-## 9. Audit Trail Flow
+## 💰 5. POS (Point of Sale) Flow
 
-| Step | Halaman/Action      | Keterangan                 |
-| ---- | ------------------- | -------------------------- |
-| 1    | Aksi terjadi        | CRUD produk/penjualan/stok |
-| 2    | Sistem log otomatis | User, modul, aksi          |
-| 3    | Buka Audit Trail    | Filter log                 |
+| Step | Halaman / Aksi               | Keterangan                                 |
+| ---- | ---------------------------- | ------------------------------------------ |
+| 1    | Masuk ke halaman POS         | User (kasir) otomatis terhubung ke tokonya |
+| 2    | Cari produk                  | Berdasarkan nama, SKU, atau barcode        |
+| 3    | Tambahkan ke keranjang       | Klik “Tambah” atau scan barcode            |
+| 4    | Ubah kuantitas / hapus item  | -                                          |
+| 5    | Sistem hitung total otomatis | Subtotal, diskon, total bayar              |
+| 6    | Pilih metode pembayaran      | Tunai / Transfer                           |
+| 7    | Klik “Simpan Transaksi”      | `POST /sales`                              |
+| 8    | Cetak / kirim struk digital  | Struk PDF atau WhatsApp                    |
+| 9    | Stok otomatis berkurang      | Update ke database                         |
 
-**Contoh log**
-
-| Waktu            | User  | Modul   | Aksi   | Detail                |
-| ---------------- | ----- | ------- | ------ | --------------------- |
-| 2025-10-21 09:30 | admin | PRODUCT | UPDATE | Harga 10.000 → 12.000 |
-
----
-
-## 10. Logout & Session Flow
-
-| Step | Halaman/Action  | Keterangan                   |
-| ---- | --------------- | ---------------------------- |
-| 1    | Klik Logout     | Hapus access + refresh token |
-| 2    | Redirect        | Kembali ke halaman Login     |
-| 3    | Session timeout | Otomatis logout              |
+📱 _Tampilan POS responsif untuk HP, dengan tombol besar dan navigasi cepat._
 
 ---
 
-Dokumen ini menjadi panduan awal untuk membuat UI Wireframe dan implementasi frontend berdasarkan React.
+## 📦 6. Manajemen Produk Flow
+
+| Step | Halaman / Aksi               | Keterangan                            |
+| ---- | ---------------------------- | ------------------------------------- |
+| 1    | Buka menu “Produk”           | Menampilkan daftar produk             |
+| 2    | Klik “Tambah Produk”         | Nama, SKU, kategori, harga, stok awal |
+| 3    | Simpan produk                | `POST /products`                      |
+| 4    | Edit atau Nonaktifkan produk | `PUT /products/:id`                   |
+| 5    | Filter dan cari produk       | Berdasarkan kategori atau status      |
+
+💡 _Formulir dibuat sesederhana mungkin untuk pengguna non-teknis._
+
+---
+
+## 📈 7. Manajemen Stok Flow
+
+| Step | Halaman / Aksi                     | Keterangan                        |
+| ---- | ---------------------------------- | --------------------------------- |
+| 1    | Buka menu “Stok”                   | Lihat stok per toko               |
+| 2    | Klik “Mutasi Stok”                 | Stock In / Stock Out / Adjustment |
+| 3    | Pilih produk dan qty               | Validasi form                     |
+| 4    | Simpan                             | `POST /inventory`                 |
+| 5    | Sistem otomatis mencatat log       | Ledger & audit trail              |
+| 6    | _(Next Phase)_ Transfer antar toko | `POST /inventory/transfer`        |
+
+---
+
+## 👥 8. Manajemen Pengguna & Role Flow
+
+| Step | Halaman / Aksi            | Keterangan                |
+| ---- | ------------------------- | ------------------------- |
+| 1    | Buka menu “User & Role”   | Hanya untuk Owner / Admin |
+| 2    | Tambah pengguna           | Nama, username, role      |
+| 3    | Assign role & toko        | Owner, Admin, Kasir       |
+| 4    | Simpan                    | `POST /users`             |
+| 5    | Aktif / Nonaktif pengguna | -                         |
+
+---
+
+## 🏬 9. Manajemen Toko Flow
+
+| Step | Halaman / Aksi | Keterangan |
+| ---- | -------------- | ---------- |
+| 1    | Buka menu      |

@@ -1,59 +1,47 @@
-# Overview - TokoFlow
+# 🔖 Overview - TokoFlow
 
-## Ringkasan
+## 📘 Ringkasan
 
-TokoFlow adalah aplikasi yang dirancang untuk membantu proses penjualan, manajemen stok, dan pengelolaan transaksi pada bisnis yang memiliki lebih dari satu toko. Sistem ini mendukung pencatatan penjualan secara real-time, pengecekan stok antar toko, serta laporan transaksi untuk mendukung pengambilan keputusan.
-
-## Tujuan Sistem
-
-- Mempermudah pencatatan penjualan dan pergerakan stok barang.
-- Mengurangi kesalahan pencatatan manual.
-- Mempercepat proses transaksi kasir.
-- Menyediakan laporan penjualan dan stok yang akurat.
-- Mendukung kolaborasi antar user dengan role berbeda.
-
-## Ruang Lingkup
-
-Sistem ini mencakup fitur utama:
-
-- Multi-user & Multi-store
-- Manajemen Produk & Kategori
-- Manajemen Stok & Transfer Stok antar Toko
-- Point of Sales (POS)
-- Manajemen Pelanggan **(Next Phase)**
-- Manajemen Supplier **(Next Phase)**
-- Purchase Order **(Next Phase)**
-- Laporan Penjualan
-- Riwayat Aktivitas
-- Hak Akses & Role Management
-
-## Peran Pengguna
-
-| Role  | Deskripsi                                    |
-| ----- | -------------------------------------------- |
-| Owner | Melihat laporan seluruh toko, mengelola user |
-| Admin | Mengelola produk, stok, dan laporan toko     |
-| Kasir | Melakukan transaksi penjualan                |
-
-## Fitur Utama
-
-- Login & Autentikasi (JWT + Role Based Access Control)
-- Multi Store Management
-- Manajemen Produk & Stok
-- Penjualan (Point of Sale / POS)
-- Dashboard Penjualan & Notifikasi Stok
-- Riwayat Transaksi & Audit Log
-- Laporan Penjualan & Stok
-
-## Teknologi
-
-Sistem ini dikembangkan menggunakan stack modern:
-
-- Backend: Node.js (Express) + Sequelize ORM
-- Database: PostgreSQL
-- Frontend: React + Material-UI
-- Autentikasi: JWT
+**TokoFlow** adalah aplikasi berbasis **Software as a Service (SaaS)** yang membantu **UMKM** dalam mencatat penjualan, mengelola stok, dan memantau laporan bisnis secara **online** dan **real-time**.  
+Tanpa perlu instalasi rumit — pengguna cukup **mendaftar akun** dan langsung dapat mengelola toko dari **HP**, **tablet**, atau **komputer**.
 
 ---
 
-Dokumen ini berfungsi sebagai gambaran awal sistem dan menjadi referensi utama dalam pengembangan.
+## 🎯 Tujuan Sistem
+
+- Mempermudah pencatatan transaksi dan stok barang secara online.
+- Mengurangi kesalahan pencatatan manual.
+- Menyediakan laporan otomatis yang bisa diakses kapan saja.
+- Mempercepat proses kasir dan administrasi toko.
+- Mendukung kolaborasi antar pengguna sesuai perannya.
+
+---
+
+## ⚙️ Ruang Lingkup Fitur
+
+- **Multi Toko & Multi User**
+- **Manajemen Produk, Kategori, dan Stok**
+- **Penjualan (Point of Sale / POS)**
+- **Transfer Stok Antar Toko**
+- **Laporan Penjualan & Notifikasi Stok**
+- **Role & Hak Akses** (Owner, Admin, Kasir)
+- _(Next Phase)_ **Pelanggan, Supplier, dan Purchase Order**
+
+---
+
+## 💼 Model Penggunaan
+
+TokoFlow disediakan sebagai layanan berbasis **langganan (subscription)**, dengan paket fitur yang dapat disesuaikan berdasarkan **kebutuhan dan jumlah toko**.  
+Semua data disimpan di **cloud yang aman** dan dapat diakses kapan saja dari berbagai perangkat.
+
+---
+
+## 💻 Teknologi
+
+TokoFlow dikembangkan dengan teknologi modern untuk performa tinggi dan skalabilitas optimal:
+
+- **Backend:** Node.js (Express) + Sequelize ORM
+- **Database:** PostgreSQL
+- **Frontend:** React (Vite + Material-UI)
+- **Autentikasi:** JWT
+- **Hosting:** Cloud Platform (Railway / Render / Vercel)

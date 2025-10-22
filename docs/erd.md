@@ -1,124 +1,218 @@
-# ERD - TokoFlow
+# 🧱 ERD – TokoFlow
 
-Dokumen ini menjelaskan **Entity Relationship Diagram (ERD)** sistem TokoFlow, mencakup modul utama: Users, Stores, Products, Inventory, Sales, dan Audit Trail.
+## 1. 📘 Ringkasan
 
----
-
-## 1. Entities & Relationships
-
-### 1.1 Users
-
-| Column    | Type     | PK/FK/Notes                |
-| --------- | -------- | -------------------------- |
-| id        | UUID     | PK                         |
-| username  | string   | unique                     |
-| password  | string   | hashed                     |
-| fullName  | string   | -                          |
-| role      | enum     | owner/admin/kasir          |
-| storeId   | UUID     | FK -> stores.id (nullable) |
-| isActive  | boolean  | default true               |
-| createdAt | datetime | -                          |
-| updatedAt | datetime | -                          |
-
-### 1.2 Stores
-
-| Column    | Type     | PK/FK/Notes |
-| --------- | -------- | ----------- |
-| id        | UUID     | PK          |
-| name      | string   | -           |
-| address   | string   | -           |
-| phone     | string   | optional    |
-| createdAt | datetime | -           |
-| updatedAt | datetime | -           |
-
-### 1.3 Products
-
-| Column     | Type     | PK/FK/Notes              |
-| ---------- | -------- | ------------------------ |
-| id         | UUID     | PK                       |
-| sku        | string   | unique                   |
-| name       | string   | -                        |
-| categoryId | UUID     | FK -> categories.id/null |
-| unit       | string   | pcs/box/pack             |
-| costPrice  | number   | -                        |
-| salePrice  | number   | -                        |
-| barcode    | string   | optional                 |
-| isActive   | boolean  | default true             |
-| createdAt  | datetime | -                        |
-| updatedAt  | datetime | -                        |
-
-### 1.4 Inventory
-
-| Column    | Type     | PK/FK/Notes       |
-| --------- | -------- | ----------------- |
-| id        | UUID     | PK                |
-| storeId   | UUID     | FK -> stores.id   |
-| productId | UUID     | FK -> products.id |
-| type      | enum     | IN/OUT/ADJUST     |
-| quantity  | number   | -                 |
-| reason    | string   | optional          |
-| reference | string   | optional          |
-| createdAt | datetime | -                 |
-
-### 1.5 Sales
-
-| Column    | Type     | PK/FK/Notes     |
-| --------- | -------- | --------------- |
-| id        | UUID     | PK              |
-| storeId   | UUID     | FK -> stores.id |
-| userId    | UUID     | FK -> users.id  |
-| total     | number   | -               |
-| status    | enum     | SAVED/DRAFT     |
-| notes     | string   | optional        |
-| createdAt | datetime | -               |
-| updatedAt | datetime | -               |
-
-#### Sales Details
-
-| Column    | Type   | PK/FK/Notes         |
-| --------- | ------ | ------------------- |
-| id        | UUID   | PK                  |
-| saleId    | UUID   | FK -> sales.id      |
-| productId | UUID   | FK -> products.id   |
-| sku       | string | copied from product |
-| name      | string | copied from product |
-| unitPrice | number | -                   |
-| quantity  | number | -                   |
-| discount  | number | optional            |
-
-### 1.6 Audit Trail
-
-| Column    | Type     | PK/FK/Notes                       |
-| --------- | -------- | --------------------------------- |
-| id        | UUID     | PK                                |
-| userId    | UUID     | FK -> users.id                    |
-| module    | string   | PRODUCT/SALES/INVENTORY/AUTH      |
-| action    | string   | CREATE/UPDATE/DELETE/LOGIN/LOGOUT |
-| before    | JSON     | optional                          |
-| after     | JSON     | optional                          |
-| meta      | JSON     | ip, userAgent                     |
-| createdAt | datetime | -                                 |
-
-### 1.7 Categories
-
-| Column    | Type     | PK/FK/Notes |
-| --------- | -------- | ----------- |
-| id        | UUID     | PK          |
-| name      | string   | unique      |
-| createdAt | datetime | -           |
-| updatedAt | datetime | -           |
+**Entity Relationship Diagram (ERD)** TokoFlow menggambarkan struktur database untuk sistem manajemen toko berbasis **Software as a Service (SaaS)**.  
+Setiap akun pengguna (**owner**) memiliki satu atau lebih **toko (store)** dalam satu lingkungan cloud (_multi-tenant_).  
+Semua data **penjualan**, **stok**, dan **user** disimpan **terisolasi per toko** untuk menjaga keamanan dan privasi data antar pengguna.
 
 ---
 
-## 2. Relationships
+## 2. 📂 Daftar Entitas & Relasi
 
-- **Users -> Stores**: Many-to-One (user belongs to a store, owner may have null)
-- **Products -> Categories**: Many-to-One (product belongs to category)
-- **Inventory -> Stores & Products**: Many-to-One (movement per store & product)
-- **Sales -> Stores & Users**: Many-to-One (sales belongs to store & created by user)
-- **SalesDetails -> Sales & Products**: Many-to-One
-- **Audit -> Users**: Many-to-One
+### 2.1 👤 Users
+
+| Kolom          | Tipe            | Keterangan                              |
+| -------------- | --------------- | --------------------------------------- |
+| `id`           | UUID            | Primary key                             |
+| `fullName`     | string          | Nama lengkap                            |
+| `email`        | string          | Unik, digunakan untuk login             |
+| `passwordHash` | string          | Disimpan dalam bentuk hash              |
+| `role`         | enum            | owner / admin / kasir                   |
+| `storeId`      | UUID (nullable) | FK → `stores.id` (user terikat ke toko) |
+| `planId`       | UUID (nullable) | FK → `subscription_plans.id`            |
+| `isActive`     | boolean         | Default: true                           |
+| `createdAt`    | datetime        | -                                       |
+| `updatedAt`    | datetime        | -                                       |
+
+💡 _Owner dapat memiliki banyak toko (multi-store), sementara admin dan kasir hanya terikat ke satu toko._
 
 ---
 
-Diagram ERD bisa divisualisasikan menggunakan tool seperti draw.io berdasarkan tabel dan relasi di atas.
+### 2.2 🏬 Stores
+
+| Kolom       | Tipe     | Keterangan      |
+| ----------- | -------- | --------------- |
+| `id`        | UUID     | Primary key     |
+| `ownerId`   | UUID     | FK → `users.id` |
+| `name`      | string   | Nama toko       |
+| `address`   | string   | Alamat toko     |
+| `phone`     | string   | Opsional        |
+| `isActive`  | boolean  | Default: true   |
+| `createdAt` | datetime | -               |
+| `updatedAt` | datetime | -               |
+
+🔗 **Relasi:**
+
+- Users (owner) → Stores _(one-to-many)_
+- Stores → Products, Sales, Inventory _(one-to-many)_
+
+---
+
+### 2.3 🗂️ Categories
+
+| Kolom       | Tipe     | Keterangan       |
+| ----------- | -------- | ---------------- |
+| `id`        | UUID     | Primary key      |
+| `storeId`   | UUID     | FK → `stores.id` |
+| `name`      | string   | Unik per toko    |
+| `createdAt` | datetime | -                |
+| `updatedAt` | datetime | -                |
+
+---
+
+### 2.4 📦 Products
+
+| Kolom        | Tipe            | Keterangan           |
+| ------------ | --------------- | -------------------- |
+| `id`         | UUID            | Primary key          |
+| `storeId`    | UUID            | FK → `stores.id`     |
+| `sku`        | string          | Unik per toko        |
+| `name`       | string          | Nama produk          |
+| `categoryId` | UUID (nullable) | FK → `categories.id` |
+| `unit`       | string          | pcs / box / pack     |
+| `costPrice`  | decimal         | Harga modal          |
+| `salePrice`  | decimal         | Harga jual           |
+| `barcode`    | string          | Opsional             |
+| `isActive`   | boolean         | Default: true        |
+| `createdAt`  | datetime        | -                    |
+| `updatedAt`  | datetime        | -                    |
+
+---
+
+### 2.5 📈 Inventory (Mutasi Stok)
+
+| Kolom       | Tipe     | Keterangan                    |
+| ----------- | -------- | ----------------------------- |
+| `id`        | UUID     | Primary key                   |
+| `storeId`   | UUID     | FK → `stores.id`              |
+| `productId` | UUID     | FK → `products.id`            |
+| `type`      | enum     | IN / OUT / ADJUST / TRANSFER  |
+| `quantity`  | integer  | Jumlah stok berubah           |
+| `reference` | string   | Referensi transaksi / dokumen |
+| `reason`    | string   | Keterangan opsional           |
+| `createdBy` | UUID     | FK → `users.id`               |
+| `createdAt` | datetime | -                             |
+
+---
+
+### 2.6 💰 Sales (Transaksi Penjualan)
+
+| Kolom           | Tipe            | Keterangan                    |
+| --------------- | --------------- | ----------------------------- |
+| `id`            | UUID            | Primary key                   |
+| `storeId`       | UUID            | FK → `stores.id`              |
+| `userId`        | UUID            | FK → `users.id` (kasir/admin) |
+| `customerId`    | UUID (nullable) | FK → `customers.id`           |
+| `total`         | decimal         | Total transaksi               |
+| `paymentMethod` | enum            | cash / transfer / qris        |
+| `status`        | enum            | SAVED / DRAFT / CANCELLED     |
+| `notes`         | string          | Opsional                      |
+| `createdAt`     | datetime        | -                             |
+| `updatedAt`     | datetime        | -                             |
+
+---
+
+### 2.7 🧾 Sales Details
+
+| Kolom       | Tipe    | Keterangan                        |
+| ----------- | ------- | --------------------------------- |
+| `id`        | UUID    | Primary key                       |
+| `saleId`    | UUID    | FK → `sales.id`                   |
+| `productId` | UUID    | FK → `products.id`                |
+| `sku`       | string  | Duplikat dari produk              |
+| `name`      | string  | Duplikat dari produk              |
+| `quantity`  | integer | Jumlah barang                     |
+| `unitPrice` | decimal | Harga per item                    |
+| `discount`  | decimal | Opsional                          |
+| `total`     | decimal | (quantity × unitPrice) - discount |
+
+---
+
+### 2.8 🔍 Audit Trail
+
+| Kolom       | Tipe     | Keterangan                         |
+| ----------- | -------- | ---------------------------------- |
+| `id`        | UUID     | Primary key                        |
+| `userId`    | UUID     | FK → `users.id`                    |
+| `module`    | string   | PRODUCT / SALES / INVENTORY / AUTH |
+| `action`    | string   | CREATE / UPDATE / DELETE / LOGIN   |
+| `before`    | JSON     | Data sebelum perubahan             |
+| `after`     | JSON     | Data sesudah perubahan             |
+| `meta`      | JSON     | IP, userAgent                      |
+| `createdAt` | datetime | -                                  |
+
+---
+
+### 2.9 💳 Subscription Plans _(SaaS Specific)_
+
+| Kolom          | Tipe     | Keterangan                    |
+| -------------- | -------- | ----------------------------- |
+| `id`           | UUID     | Primary key                   |
+| `name`         | string   | Nama paket (Free, Basic, Pro) |
+| `price`        | decimal  | Harga per bulan               |
+| `storeLimit`   | integer  | Jumlah toko maksimum          |
+| `productLimit` | integer  | Jumlah produk maksimum        |
+| `userLimit`    | integer  | Jumlah user maksimum          |
+| `features`     | JSON     | Daftar fitur aktif            |
+| `createdAt`    | datetime | -                             |
+
+---
+
+### 2.10 📆 Subscriptions
+
+| Kolom              | Tipe     | Keterangan                   |
+| ------------------ | -------- | ---------------------------- |
+| `id`               | UUID     | Primary key                  |
+| `userId`           | UUID     | FK → `users.id` (owner)      |
+| `planId`           | UUID     | FK → `subscription_plans.id` |
+| `status`           | enum     | ACTIVE / EXPIRED / CANCELLED |
+| `startDate`        | datetime | -                            |
+| `endDate`          | datetime | -                            |
+| `paymentReference` | string   | ID dari Midtrans / Xendit    |
+| `createdAt`        | datetime | -                            |
+
+---
+
+## 3. 🔗 Hubungan Antar Entitas (Ringkasan)
+
+| Relasi                    | Jenis       | Deskripsi                                  |
+| ------------------------- | ----------- | ------------------------------------------ |
+| Users ↔ Stores            | One-to-Many | Owner bisa punya banyak toko               |
+| Stores ↔ Products         | One-to-Many | Tiap toko punya daftar produk sendiri      |
+| Products ↔ Inventory      | One-to-Many | Setiap produk memiliki mutasi stok         |
+| Sales ↔ SalesDetails      | One-to-Many | Setiap transaksi punya banyak item         |
+| Sales ↔ Users             | Many-to-One | Transaksi dilakukan oleh kasir/admin       |
+| Users ↔ SubscriptionPlans | Many-to-One | Tiap owner terikat ke satu paket langganan |
+| AuditTrail ↔ Users        | Many-to-One | Log aktivitas oleh user tertentu           |
+
+---
+
+## 4. 🏗️ Model Multi-Tenant
+
+TokoFlow menggunakan pendekatan **single database**, _isolated by `storeId`_:
+
+- Semua tabel utama (`products`, `sales`, `inventory`, dll.) memiliki kolom `storeId`.
+- Setiap pengguna (admin/kasir) hanya dapat mengakses data yang terkait dengan `storeId` mereka.
+- Owner dapat melihat data lintas toko.
+
+**Keuntungan:**
+
+- ⚡ Skalabilitas tinggi (1 database untuk banyak tenant)
+- 💾 Hemat resource (dibanding 1 DB per toko)
+- 🔧 Mudah dikelola & di-backup
+
+---
+
+## 5. 🧠 Catatan Implementasi
+
+- **ORM:** Sequelize (Node.js)
+- **Database:** PostgreSQL
+- **Schema:** Public, dengan `storeId` sebagai foreign key di semua entitas operasional
+- **Autentikasi:** JWT + Role-Based Access Control
+- **Integrasi Pembayaran:** Midtrans / Xendit _(Subscription Billing)_
+
+---
+
+📘 _ERD ini dirancang agar fleksibel dan siap dikembangkan sebagai sistem SaaS multi-tenant dengan opsi langganan (freemium → premium)._  
+Struktur ini menjaga keseimbangan antara **skalabilitas**, **performa**, dan **kemudahan pengembangan backend** menggunakan **Express + Sequelize + PostgreSQL**.

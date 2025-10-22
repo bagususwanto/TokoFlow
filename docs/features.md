@@ -1,128 +1,142 @@
-# System Features - TokoFlow
+# ⚙️ System Features - TokoFlow
 
-Dokumen ini menjelaskan daftar fitur sistem TokoFlow berdasarkan modul utama yang akan dikembangkan. Struktur ini menjadi panduan implementasi bertahap untuk solo developer.
-
----
-
-## 1. Authentication & Access Module (MVP)
-
-| Feature          | Description                                | Dependency       |
-| ---------------- | ------------------------------------------ | ---------------- |
-| Login            | Authenticate user with username & password | -                |
-| JWT Access Token | Generate access token                      | Login            |
-| Refresh Token    | Renew expired access token                 | JWT Access Token |
-| RBAC             | Role-Based Access Control                  | Login            |
-| Auth Middleware  | Protect backend routes                     | JWT Access Token |
-| Logout           | Clear user session                         | Login            |
+Semua fitur dirancang agar **mudah digunakan**, **ringan di perangkat**, dan **siap dipakai tanpa instalasi tambahan**.  
+Pengguna cukup **mendaftar akun** dan dapat langsung mengelola toko dari **HP**, **tablet**, atau **komputer**.
 
 ---
 
-## 2. User & Store Management Module (MVP)
+## 🧩 Modul Utama
 
-| Feature              | Description         | Dependency     |
-| -------------------- | ------------------- | -------------- |
-| Create User          | Add new user        | Authentication |
-| Assign Role          | Owner/Admin/Kasir   | Create User    |
-| Manage Stores        | CRUD store branches | -              |
-| Assign User to Store | Bind user to store  | Manage Stores  |
-| Deactivate User      | Disable user        | Create User    |
+Berikut adalah daftar modul fitur utama yang dikembangkan di **TokoFlow**, disusun sesuai prioritas implementasi.
 
----
+### 1. 🔐 Autentikasi & Akses Pengguna (MVP)
 
-## 3. Product Management Module (MVP)
+| Fitur                 | Deskripsi                                    | Keterangan              |
+| --------------------- | -------------------------------------------- | ----------------------- |
+| **Login & Register**  | Pengguna dapat mendaftar dan masuk ke sistem | Dasar SaaS multi-tenant |
+| **Token Akses (JWT)** | Sistem autentikasi aman berbasis token       | Otomatis login ulang    |
+| **Role & Permission** | Hak akses Owner, Admin, dan Kasir            | Pengaturan peran toko   |
+| **Logout**            | Hapus sesi login secara aman                 | -                       |
 
-| Feature                    | Description         | Dependency     |
-| -------------------------- | ------------------- | -------------- |
-| Create Product             | SKU, Name           | User & Store   |
-| Category                   | Organize products   | Create Product |
-| Unit                       | pcs/box/pack        | Create Product |
-| Pricing                    | Cost & sale price   | Create Product |
-| Product Status             | Activate/Deactivate | Create Product |
-| Barcode Support (optional) | Scan with barcode   | Create Product |
+💡 _Fitur ini memastikan setiap toko dan pengguna memiliki data yang terpisah (multi-tenant)._
 
 ---
 
-## 4. Inventory Module (MVP)
+### 2. 🏬 Manajemen Pengguna & Toko
 
-| Feature            | Description          | Dependency      |
-| ------------------ | -------------------- | --------------- |
-| Stock per Store    | Track stock by store | Product Module  |
-| Initial Stock      | First stock input    | Stock per Store |
-| Stock Ledger       | Track stock IN/OUT   | Stock per Store |
-| Auto Reduce        | Reduce stock on POS  | POS Module      |
-| Adjustment         | +/- stock difference | Stock Ledger    |
-| Transfer (Phase 2) | Inter-store transfer | Stock Ledger    |
+| Fitur                     | Deskripsi                              | Keterangan            |
+| ------------------------- | -------------------------------------- | --------------------- |
+| **Kelola Toko**           | Tambah dan atur cabang toko            | Mendukung multi-store |
+| **Kelola Pengguna**       | Tambah user dengan peran tertentu      | Owner, Admin, Kasir   |
+| **Atribusi User ke Toko** | Setiap user dikaitkan ke toko tertentu | Multi-user ready      |
+| **Status Pengguna**       | Aktif / Nonaktif                       | Kontrol akses mudah   |
 
 ---
 
-## 5. Point of Sale (POS) Module (MVP)
+### 3. 📦 Manajemen Produk & Stok
 
-| Feature                | Description                        | Dependency       |
-| ---------------------- | ---------------------------------- | ---------------- |
-| Search Product         | Search product by name/SKU/barcode | Product Module   |
-| Add to Cart            | Add/remove product from cart       | Search Product   |
-| Quantity Update        | Edit quantity directly in cart     | Add to Cart      |
-| Auto Total Calculate   | Subtotal & total calculation       | Quantity Update  |
-| Payment                | Cash / Transfer                    | Auto Total       |
-| Save Transaction       | Save sales and sales detail        | Payment          |
-| Auto Stock Reduce      | Stock deducted per sold item       | Save Transaction |
-| Draft Transaction (\*) | Save transaction as pending        | Save Transaction |
-| Receipt Print          | Print/download invoice             | Save Transaction |
-| Barcode Support (\*)   | Ready for barcode scanner input    | Search Product   |
+| Fitur               | Deskripsi                    | Keterangan            |
+| ------------------- | ---------------------------- | --------------------- |
+| **Tambah Produk**   | Nama, SKU, harga beli & jual | Dukungan multi-satuan |
+| **Kategori Barang** | Kelompokkan produk           | -                     |
+| **Barcode**         | Dukungan scanner barcode     | Opsional              |
+| **Status Produk**   | Aktif / Nonaktif             | -                     |
+| **Laporan Stok**    | Lihat stok per toko          | Real-time             |
+
+💡 _Fitur ini jadi dasar operasional toko untuk mencatat dan memantau stok secara otomatis._
 
 ---
 
-## 6. Customer Module (Next Phase)
+### 4. 💰 Penjualan (Point of Sale / POS)
 
-| Feature                   | Description                    | Dependency    |
-| ------------------------- | ------------------------------ | ------------- |
-| Customer List             | View all customers             | -             |
-| Create Customer           | Add new customer               | Customer List |
-| Edit Customer             | Update customer details        | Customer List |
-| Customer Purchase History | Track customer transactions    | POS Module    |
-| Customer Search           | Search customers by name/phone | Customer List |
+| Fitur                   | Deskripsi                               | Keterangan                                |
+| ----------------------- | --------------------------------------- | ----------------------------------------- |
+| **Pencarian Barang**    | Berdasarkan nama, SKU, atau barcode     | Cepat dan ringan                          |
+| **Keranjang Penjualan** | Tambah / hapus produk sebelum transaksi | -                                         |
+| **Hitung Otomatis**     | Subtotal dan total transaksi            | -                                         |
+| **Pembayaran**          | Tunai / Transfer                        | -                                         |
+| **Simpan Transaksi**    | Rekam transaksi ke database             | -                                         |
+| **Cetak Struk**         | Cetak / unduh invoice penjualan         | Dukungan printer Bluetooth _(next phase)_ |
 
-## 7. Supplier Module (Next Phase)
-
-| Feature                   | Description                   | Dependency    |
-| ------------------------- | ----------------------------- | ------------- |
-| Supplier List             | View supplier data            | -             |
-| Add Supplier              | Register new supplier         | Supplier List |
-| Edit Supplier             | Update supplier data          | Supplier List |
-| Supplier Purchase History | Track purchases from supplier | -             |
-
-## 8. Purchase Order Module (Next Phase)
-
-| Feature          | Description                       | Dependency       |
-| ---------------- | --------------------------------- | ---------------- |
-| PO List          | View list of purchase orders      | Supplier Module  |
-| Create PO        | Create purchase order to supplier | PO List          |
-| Approve PO       | Approve purchase order            | Create PO        |
-| Receive Products | Input stock from supplier         | Inventory Module |
-| PO History       | View PO activities                | PO List          |
-
-## 9. Reporting Module (MVP)
-
-| Feature               | Description                    | Dependency     |
-| --------------------- | ------------------------------ | -------------- |
-| Daily Sales Report    | Show daily transaction summary | POS Module     |
-| Monthly Sales Report  | Monthly sales performance      | POS Module     |
-| Stock Report          | Current stock by product/store | Inventory      |
-| Stock Movement Report | Track stock in/out history     | Inventory      |
-| Export Excel          | Export report to Excel         | Reporting Data |
+📱 _Kasir bisa melakukan transaksi langsung dari browser HP tanpa instalasi._
 
 ---
 
-## 10. Audit Trail Module (MVP)
+### 5. 📊 Laporan & Dashboard
 
-| Feature                 | Description                         | Dependency       |
-| ----------------------- | ----------------------------------- | ---------------- |
-| User Activity Log       | Track user login/logout activity    | Authentication   |
-| Data Change Log         | Record create/update/delete actions | All Modules      |
-| Stock Movement Trace    | Monitor stock mutation history      | Inventory Module |
-| Transaction Tracking    | Monitor POS transaction activities  | POS Module       |
-| Audit Report Export(\*) | Export audit logs                   | Reporting Module |
+| Fitur                 | Deskripsi                          | Keterangan      |
+| --------------------- | ---------------------------------- | --------------- |
+| **Ringkasan Harian**  | Tampilkan total penjualan harian   | Dashboard utama |
+| **Laporan Bulanan**   | Analisis performa toko             | Grafik & tabel  |
+| **Laporan Stok**      | Stok barang terkini                | -               |
+| **Riwayat Transaksi** | Filter berdasarkan tanggal & kasir | -               |
+| **Ekspor Excel**      | Unduh laporan ke Excel             | Fitur Premium   |
+
+💡 _Membantu pemilik toko memantau performa bisnis secara real-time._
 
 ---
 
-Dokumen ini menjadi dasar untuk menyusun API Spec dan UI Flow selanjutnya.
+### 6. 🔁 Manajemen Stok Lanjutan (Phase 2)
+
+| Fitur                     | Deskripsi                            | Keterangan        |
+| ------------------------- | ------------------------------------ | ----------------- |
+| **Transfer Antar Toko**   | Pindahkan stok antar cabang          | Untuk multi-store |
+| **Penyesuaian Stok**      | Koreksi stok manual (+/-)            | -                 |
+| **Log Pergerakan Barang** | Catatan otomatis setiap stok berubah | -                 |
+
+---
+
+### 7. 👥 Pelanggan & Supplier (Next Phase)
+
+| Modul              | Fitur                                    | Keterangan              |
+| ------------------ | ---------------------------------------- | ----------------------- |
+| **Pelanggan**      | Simpan data pelanggan, riwayat pembelian | Loyalitas pelanggan     |
+| **Supplier**       | Catat pemasok & riwayat pembelian        | Dasar untuk modul PO    |
+| **Purchase Order** | Buat dan setujui permintaan pembelian    | Integrasi ke stok masuk |
+
+---
+
+### 8. 🧾 Audit Trail & Keamanan Data
+
+| Fitur                 | Deskripsi                             | Keterangan         |
+| --------------------- | ------------------------------------- | ------------------ |
+| **Log Aktivitas**     | Lacak login/logout dan perubahan data | Transparansi penuh |
+| **Riwayat Transaksi** | Pantau aktivitas kasir dan admin      | -                  |
+| **Ekspor Log**        | Download riwayat aktivitas            | Fitur Premium      |
+
+---
+
+## 💸 Model Penggunaan & Paket
+
+TokoFlow disediakan dengan model **langganan bulanan (SaaS)** agar semua data tersimpan aman di **cloud** dan bisa diakses kapan saja.
+
+| Paket                | Harga (perkiraan) | Fitur                                                           |
+| -------------------- | ----------------- | --------------------------------------------------------------- |
+| **Starter (Gratis)** | Rp0               | 1 toko, 20 produk, laporan harian                               |
+| **Basic**            | Rp49.000/bln      | 3 toko, laporan Excel, dashboard, role user                     |
+| **Pro**              | Rp99.000/bln      | Tanpa batas toko, audit log, ekspor laporan, dukungan prioritas |
+
+---
+
+## ⚙️ Teknologi
+
+- **Backend:** Node.js (Express) + Sequelize ORM
+- **Database:** PostgreSQL _(Multi-tenant)_
+- **Frontend:** React (Vite + Material-UI)
+- **Autentikasi:** JWT
+- **Hosting:** Cloud (Render / Railway / Vercel)
+- **Payment Integration:** Midtrans / Xendit _(Subscription Billing)_
+
+---
+
+## 🧭 Tahapan Implementasi
+
+| Tahap          | Fokus                                | Target                        |
+| -------------- | ------------------------------------ | ----------------------------- |
+| **MVP**        | Login, Produk, POS, Laporan dasar    | Rilis versi uji coba _(Beta)_ |
+| **Phase 2**    | Multi toko, Transfer stok, Dashboard | Versi SaaS berbayar           |
+| **Next Phase** | Pelanggan, Supplier, Purchase Order  | Versi Pro + Enterprise        |
+
+---
+
+📘 _Dokumen ini menjadi acuan pengembangan API dan UI Flow untuk versi SaaS **TokoFlow** yang ditujukan bagi UMKM retail dan toko kecil._
