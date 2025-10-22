@@ -118,17 +118,6 @@ TokoFlow disediakan dengan model **langganan bulanan (SaaS)** agar semua data te
 
 ---
 
-## ⚙️ Teknologi
-
-- **Backend:** Node.js (Express) + Sequelize ORM
-- **Database:** PostgreSQL _(Multi-tenant)_
-- **Frontend:** React (Vite + Material-UI)
-- **Autentikasi:** JWT
-- **Hosting:** Cloud (Render / Railway / Vercel)
-- **Payment Integration:** Midtrans / Xendit _(Subscription Billing)_
-
----
-
 ## 🧭 Tahapan Implementasi
 
 | Tahap          | Fokus                                | Target                        |
