@@ -1,65 +1,131 @@
-# TokoFlow Project
+# 🏪 TokoFlow Project
 
-Sistem TokoFlow adalah aplikasi kasir dan manajemen stok untuk bisnis multi-toko.
+TokoFlow adalah aplikasi kasir dan manajemen stok berbasis **SaaS (Software as a Service)** yang dirancang untuk membantu **UMKM dan bisnis retail multi-cabang**. Sistem ini mendukung **multi-store**, **multi-user**, dan **pelaporan real-time** untuk mempermudah operasional bisnis.
 
-## 📂 Struktur Project
+---
+
+## 📁 Struktur Project
 
 ```
 root/
 │
-├─ frontend/       # Source code frontend React + Material-UI
-├─ backend/        # Source code backend Node.js + Express + Sequelize
-├─ docs/           # Dokumentasi proyek
-│   ├─ overview.md
-│   ├─ features.md
-│   ├─ ui-flow.md
-│   ├─ erd.md
-│   ├─ api-spec.md
-│   └─ use-case.md
-├─ README.md       # Dokumentasi project (root)
-└─ LICENSE         # Lisensi proyek
+├─ frontend/        # Source code frontend (React + Material-UI + Vite)
+├─ backend/         # Source code backend (Node.js + Express + Sequelize)
+├─ docs/            # Dokumentasi teknis sistem
+│   ├─ overview.md          # Ringkasan sistem & ruang lingkup
+│   ├─ features.md          # Daftar fitur utama & dependency antar modul
+│   ├─ ui-flow.md           # Alur navigasi user & proses onboarding
+│   ├─ erd.md               # Skema database (ERD & DBML)
+│   ├─ api-spec.md          # Spesifikasi API dengan contoh request/response
+│   └─ use-case.md          # Use case lengkap per role (Owner, Admin, Kasir)
+├─ postman/         # Koleksi API testing (Postman Collection)
+├─ README.md        # Dokumentasi utama proyek (root)
+└─ LICENSE          # Lisensi proyek
 ```
 
-## 🧰 Teknologi
+---
 
-- **Frontend:** React + Material-UI
-- **Backend:** Node.js + Express + Sequelize
-- **Database:** PostgreSQL
-- **Autentikasi:** JWT
+## ⚙️ Teknologi yang Digunakan
 
-## 🚀 Cara Menjalankan
+| Layer       | Teknologi                               |
+| ----------- | --------------------------------------- |
+| Frontend    | React + Material UI + Vite              |
+| Backend     | Node.js (Express) + Sequelize ORM       |
+| Database    | PostgreSQL                              |
+| Autentikasi | JWT (Access & Refresh Token)            |
+| Infra (Dev) | GitHub Pages (docs), Postman (API test) |
 
-### Backend
+---
+
+## 🚀 Cara Menjalankan Proyek
+
+### 🧩 Backend (API Server)
 
 ```bash
 cd backend
 npm install
 npm run dev
+# Akses: http://localhost:5000/api/v1
 ```
 
-### Frontend
+### 💻 Frontend (Web Client)
 
 ```bash
 cd frontend
 npm install
-npm start
+npm run dev
+# Akses: http://localhost:5173
 ```
 
-## 📚 Dokumentasi
+---
 
-Semua dokumentasi ada di folder `docs/`:
+## 🧭 Alur Onboarding (Tenant Baru)
 
-- `overview.md` - Ringkasan sistem
-- `features.md` - Fitur utama & dependency
-- `ui-flow.md` - Alur navigasi user
-- `erd.md` - Skema database & relasi
-- `api-spec.md` - Spesifikasi API dengan contoh
-- `use-case.md` - Use case singkat per actor
+1. Owner mendaftar akun pertama melalui halaman registrasi
+2. Sistem otomatis membuat:
 
-## 👨‍💻 Contributors
+   - Toko pertama (default store)
+   - User kasir awal (default cashier)
 
-- Bagus Uswanto (Developer)
+3. Setelah login, Owner diarahkan ke **Dashboard Setup Guide** untuk:
 
-## 📄 License
+   - Menambah produk pertama
+   - Melengkapi informasi toko
+   - Menambah admin atau kasir tambahan
 
-MIT License | Copyright (c) 2025 Bagus Uswanto
+4. Sistem siap digunakan untuk transaksi dan pelaporan real-time
+
+---
+
+## 📚 Dokumentasi Lengkap
+
+Semua dokumentasi berada di folder `/docs`:
+
+| File        | Deskripsi                                             |
+| ----------- | ----------------------------------------------------- |
+| overview.md | Ringkasan sistem & ruang lingkup SaaS                 |
+| features.md | Modul utama & dependency antar fitur                  |
+| ui-flow.md  | Alur navigasi pengguna & onboarding flow              |
+| erd.md      | Entity Relationship Diagram (ERD) & struktur database |
+| api-spec.md | Spesifikasi endpoint API                              |
+| use-case.md | Daftar use case per role                              |
+
+📖 Versi web dokumentasi tersedia di:
+➡️ [https://bagususwanto.github.io/TokoFlow/](https://bagususwanto.github.io/TokoFlow/)
+
+---
+
+## 🧪 Testing API (Postman)
+
+Gunakan koleksi Postman yang tersedia di folder `/postman`:
+
+1. Import `TokoFlow-Complete.postman_collection.json`
+2. Import `TokoFlow.postman_environment.json`
+3. Login via `POST /auth/login` untuk mendapatkan token JWT
+4. Semua request selanjutnya otomatis memakai `{{token}}`
+
+---
+
+## 👥 Kontributor
+
+| Nama          | Peran                                |
+| ------------- | ------------------------------------ |
+| Bagus Uswanto | Fullstack Developer / Project Author |
+
+---
+
+## 📄 Lisensi
+
+Proyek ini menggunakan lisensi **MIT License**.
+
+© 2025 Bagus Uswanto. Semua hak cipta dilindungi.
+
+---
+
+## 🏁 Status Proyek
+
+| Atribut         | Status                                 |
+| --------------- | -------------------------------------- |
+| Versi           | v1.0.0 - SaaS Multi-Store Edition      |
+| Status          | Development                            |
+| Target Pengguna | UMKM, Retail, Minimarket, Multi-Cabang |
