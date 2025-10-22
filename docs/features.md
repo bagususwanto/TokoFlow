@@ -113,7 +113,7 @@ TokoFlow disediakan dengan model **langganan bulanan (SaaS)** agar semua data te
 | Paket                | Harga (perkiraan) | Fitur                                                           |
 | -------------------- | ----------------- | --------------------------------------------------------------- |
 | **Starter (Gratis)** | Rp0               | 1 toko, 20 produk, laporan harian                               |
-| **Basic**            | Rp49.000/bln      | 3 toko, laporan Excel, dashboard, role user                     |
+| **Basic**            | Rp49.000/bln      | 3 toko, laporan Excel, dashboard, role user manajemen           |
 | **Pro**              | Rp99.000/bln      | Tanpa batas toko, audit log, ekspor laporan, dukungan prioritas |
 
 ---
